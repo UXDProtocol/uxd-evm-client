@@ -842,8 +842,8 @@
         "affectsGlobalScope": true
       },
       "../src/lib/controller.ts": {
-        "version": "9349158ba28348dd823e5445b8664c0c9aa26cddbe44a0a62c98876a0c9bf3eb",
-        "signature": "68f262fe694a4b826be78b1bd79e0e4b9eef159793f72aefba69257fc24db1c0",
+        "version": "83d6fe4924d1e85e82dba476aabf48f5b0669c56f2b947b40aa3c122aaae995d",
+        "signature": "618bceebf8486a27545fb43ad199d2d345b28c3018774ae1b11ef18260fe0dd7",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {
