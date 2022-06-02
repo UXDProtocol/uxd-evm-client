@@ -39,12 +39,24 @@ export class UXDController {
     this.registerEventListeners();
   }
 
-  public async mint(market: string, collateral: string, amount: BigNumber, signer: Signer): Promise<any> {
-    return await this.controllerContract.connect(signer).mint(market, collateral, amount);
+  public async mint(
+      market: string, 
+      collateral: string, 
+      amount: BigNumber,
+      slippage: BigNumber,
+      signer: Signer
+    ): Promise<any> {
+    return await this.controllerContract.connect(signer).mint(market, collateral, amount, slippage);
   }
 
-  public async redeem(market: string, collateral: string, amount: BigNumber, signer: Signer): Promise<any> {
-    return await this.controllerContract.connect(signer).redeem(market, collateral, amount);
+  public async redeem(
+      market: string, 
+      collateral: string, 
+      amount: BigNumber,
+      slippage: BigNumber,
+      signer: Signer
+    ): Promise<any> {
+    return await this.controllerContract.connect(signer).redeem(market, collateral, amount, slippage);
   }
 
   public async getCollateralInfo(): Promise<CollateralInfo> {
