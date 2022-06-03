@@ -76,7 +76,6 @@ export class UXDController {
     return await contract.connect(signer).approve(spender, amount);
   }
 
-
   public async allowance(contractAddress: string, account: string, spender: string): Promise<BigNumber> {
     const contract = new ethers.Contract(
       contractAddress,
