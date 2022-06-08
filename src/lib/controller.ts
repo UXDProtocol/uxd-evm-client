@@ -59,6 +59,23 @@ export class UXDController {
     return await this.controllerContract.connect(signer).redeem(market, collateral, amount, slippage);
   }
 
+  public async mintWithEth(
+    market: string,
+    ethAmount: BigNumber,
+    slippage: BigNumber,
+    signer: Signer
+  ) {
+    return await this.controllerContract.connect(signer).mintWithEth(market, slippage, {value: ethAmount});
+  }
+
+  public async redeemEth(
+    market: string,
+    ethAmount: BigNumber,
+    signer: Signer
+  ) {
+    return await this.controllerContract.connect(signer).redeemEth(market, ethAmount);
+  }
+
   public async getCollateralInfo(): Promise<CollateralInfo> {
     return await this.controllerContract.getCollateralInfo();
   }
