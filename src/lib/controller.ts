@@ -84,10 +84,11 @@ export class UXDController {
 
   public async redeemEth(
     market: string,
-    ethAmount: BigNumber,
+    uxdAmount: BigNumber,
+    slippage: BigNumber,
     signer: Signer
   ) {
-    return await this.controllerContract.connect(signer).redeemEth(market, ethAmount);
+    return await this.controllerContract.connect(signer).redeemEth(market, uxdAmount, slippage);
   }
 
   public async getCollateralInfo(): Promise<CollateralInfo> {
@@ -114,6 +115,15 @@ export class UXDController {
       this.provider
     );
     return await contract.allowance(account, spender)
+  }
+
+  public async tokenBalance(contractAddress: string, account: string): Promise<BigNumber> {
+    const contract = new ethers.Contract(
+      contractAddress,
+      ERC20.abi,
+      this.provider
+    );
+    return await contract.balanceOf(account) 
   }
 
   public async uxdTotalSupply(): Promise<BigNumber> {
