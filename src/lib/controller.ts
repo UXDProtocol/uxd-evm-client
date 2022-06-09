@@ -42,21 +42,31 @@ export class UXDController {
   public async mint(
       market: string, 
       collateral: string, 
-      amount: BigNumber,
+      ethAmount: BigNumber,
       slippage: BigNumber,
       signer: Signer
     ): Promise<any> {
-    return await this.controllerContract.connect(signer).mint(market, collateral, amount, slippage);
+    return await this.controllerContract.connect(signer).mint(
+      market, 
+      collateral, 
+      ethAmount, 
+      slippage
+    );
   }
 
   public async redeem(
       market: string, 
       collateral: string, 
-      amount: BigNumber,
+      uxdAmount: BigNumber,
       slippage: BigNumber,
       signer: Signer
     ): Promise<any> {
-    return await this.controllerContract.connect(signer).redeem(market, collateral, amount, slippage);
+    return await this.controllerContract.connect(signer).redeem(
+      market, 
+      collateral, 
+      uxdAmount, 
+      slippage
+    );
   }
 
   public async mintWithEth(
@@ -65,7 +75,11 @@ export class UXDController {
     slippage: BigNumber,
     signer: Signer
   ) {
-    return await this.controllerContract.connect(signer).mintWithEth(market, slippage, {value: ethAmount});
+    return await this.controllerContract.connect(signer).mintWithEth(
+      market, 
+      slippage, 
+      {value: ethAmount}
+    );
   }
 
   public async redeemEth(

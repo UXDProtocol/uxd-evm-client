@@ -832,7 +832,7 @@
         "affectsGlobalScope": false
       },
       "../src/artifacts/uxdcontroller.json": {
-        "version": "faca1a7e36e7d35c6992c95a754d0d68a9b66da24e6a01e7246497e3c2a14c21",
+        "version": "07d2432e94c250d7bdc33021290c0b3489eaa2f280a048b459a94e2ff6b6598c",
         "signature": "f7ae907c7d50e8ffa17dc37773d681f83ed1db2a03ebb56c50e902345632d590",
         "affectsGlobalScope": true
       },
@@ -842,8 +842,8 @@
         "affectsGlobalScope": true
       },
       "../src/lib/controller.ts": {
-        "version": "92b51a6839bab13c5f3dc17eeded3dc7a8fc91b4ddd49f61fef7009b716adace",
-        "signature": "642d6bf6b544d7f9962dd7747538caa2117161761bf50fab7e326ec8db90c3c4",
+        "version": "aae838572dedab9baf404093aa04b9eca2bc326e37a2f55304eb0a59e14c8e26",
+        "signature": "f09d2fd7e9c744a2688f1710ca51512b30ce349b6844ad69d3887a93542dd75f",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {

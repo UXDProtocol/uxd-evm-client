@@ -15,8 +15,8 @@ export declare class UXDController {
     uxdApprovalSubject: Subject<any>;
     uxdTransferSubject: Subject<any>;
     constructor(provider: ethers.providers.JsonRpcProvider, controllerAddress: string, uxdTokenAddress: string);
-    mint(market: string, collateral: string, amount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
-    redeem(market: string, collateral: string, amount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
+    mint(market: string, collateral: string, ethAmount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
+    redeem(market: string, collateral: string, uxdAmount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
     mintWithEth(market: string, ethAmount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
     redeemEth(market: string, ethAmount: BigNumber, signer: Signer): Promise<any>;
     getCollateralInfo(): Promise<CollateralInfo>;
