@@ -42,3 +42,7 @@ const totalSupply = await controller.uxdTotalSupply()
 
 Check this [here](https://github.com/UXDProtocol/uxd-evm-client/blob/main/src/lib/controller.ts) to see the list of public functions availale on the controller.
 
+
+### Version
+Version 1.0.0 has been unpublished.
+Current version are tagged as alph 0.0.1-alpha.X

@@ -832,7 +832,7 @@
         "affectsGlobalScope": false
       },
       "../src/artifacts/uxdcontroller.json": {
-        "version": "07d2432e94c250d7bdc33021290c0b3489eaa2f280a048b459a94e2ff6b6598c",
+        "version": "1b043a87619b39fbf3a1e70628dd0adcdee2c308385363264fab60f1c8b94199",
         "signature": "f7ae907c7d50e8ffa17dc37773d681f83ed1db2a03ebb56c50e902345632d590",
         "affectsGlobalScope": true
       },
