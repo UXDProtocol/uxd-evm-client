@@ -832,8 +832,8 @@
         "affectsGlobalScope": false
       },
       "../src/artifacts/uxdcontroller.json": {
-        "version": "1b043a87619b39fbf3a1e70628dd0adcdee2c308385363264fab60f1c8b94199",
-        "signature": "f7ae907c7d50e8ffa17dc37773d681f83ed1db2a03ebb56c50e902345632d590",
+        "version": "e35fe301a610abe8064985d350b6d1436fc03e9da938578d457194f6e0881f70",
+        "signature": "07a9c653b194a456a5ba46c32155c6f18e1142ea7187793b3b95a1e426ed08ac",
         "affectsGlobalScope": true
       },
       "../src/artifacts/erc20.json": {
