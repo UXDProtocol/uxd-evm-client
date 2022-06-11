@@ -139,21 +139,19 @@ export class UXDController {
   }
 
   private registerEventListeners() {
-    this.controllerContract.on('Minted', async (res) => {
-      console.log('Minted: ', res);
-      this.mintSubject.next(res);
+    this.controllerContract.on('Minted', async (account, base, quote) => {
+      this.mintSubject.next({account, base, quote});
     });
-    this.controllerContract.on('Redeemed', async (res) => {
-      console.log('Redeemed: ', res);
-      this.redeemSubject.next(res);
+    this.controllerContract.on('Redeemed', async (account, base, quote) => {
+      this.redeemSubject.next({account, base, quote});
     });
 
-    this.uxdContract.on('Approval', async (res) => {
-      this.uxdApprovalSubject.next(res);
+    this.uxdContract.on('Approval', async (account, spender, amount) => {
+      this.uxdApprovalSubject.next({account, spender, amount});
     });
 
-    this.uxdContract.on('Transfer', async (res) => {
-      this.uxdTransferSubject.next(res);
+    this.uxdContract.on('Transfer', async (from, to, amount) => {
+      this.uxdTransferSubject.next({from, to, amount});
     });
   }
 }

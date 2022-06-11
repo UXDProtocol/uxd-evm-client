@@ -842,7 +842,7 @@
         "affectsGlobalScope": true
       },
       "../src/lib/controller.ts": {
-        "version": "d7f99234b82a82dd95897e67c32f985a7e33f4819b5ed529a33d440859bbbcf6",
+        "version": "9c987f3f55e0148bc4600bf3c284c0e0c4da2ef3e2f63e7ada81e43e79cd7ad6",
         "signature": "c90b962e0d844cc05428695588d9c8e6c4aedaf1fc986cbc6ed0d4b48004cbb4",
         "affectsGlobalScope": false
       },
