@@ -1,4 +1,4 @@
-import { BigNumber, ethers, Signer } from 'ethers';
+import { BigNumber, Contract, ethers, Signer } from 'ethers';
 import Controller from '../artifacts/UXDController.json';
 import ERC20 from '../artifacts/ERC20.json';
 import { Subject } from 'rxjs';
@@ -12,8 +12,10 @@ export interface CollateralInfo {
 
 export class UXDController {
   // internal contracts
-  private controllerContract: any;
-  private uxdContract: any;
+  private controllerContract: Contract;
+  private uxdContract: Contract;
+
+  // market to mint in
   private market: string;
 
   // clients can listen to events on these subjects
@@ -174,12 +176,14 @@ export class UXDController {
     return Number(ethers.utils.formatEther(totalSupply));
   }
 
-  public async mintedPerCollateral(token: string): Promise<BigNumber> {
-    return this.controllerContract.mintedPerCollateral(token);
+  public async mintedPerCollateral(token: string): Promise<number> {
+    const minted = await this.controllerContract.mintedPerCollateral(token);
+    return Number(ethers.utils.formatEther(minted));
   }
 
-  public async redeemable(token: string): Promise<BigNumber> {
-    return this.controllerContract.redeemable(token);
+  public async getRedeemableCollateral(token: string): Promise<number> {
+    const redeemable = await this.controllerContract.redeemable(token);
+    return Number(ethers.utils.formatEther(redeemable));
   }
 
   private registerEventListeners() {

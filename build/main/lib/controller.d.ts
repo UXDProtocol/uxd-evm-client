@@ -28,7 +28,7 @@ export declare class UXDController {
     allowance(contractAddress: string, account: string, spender: string): Promise<number>;
     tokenBalance(contractAddress: string, account: string): Promise<number>;
     uxdTotalSupply(): Promise<number>;
-    mintedPerCollateral(token: string): Promise<BigNumber>;
-    redeemable(token: string): Promise<BigNumber>;
+    mintedPerCollateral(token: string): Promise<number>;
+    getRedeemableCollateral(token: string): Promise<number>;
     private registerEventListeners;
 }
