@@ -842,8 +842,8 @@
         "affectsGlobalScope": true
       },
       "../src/lib/controller.ts": {
-        "version": "9c987f3f55e0148bc4600bf3c284c0e0c4da2ef3e2f63e7ada81e43e79cd7ad6",
-        "signature": "c90b962e0d844cc05428695588d9c8e6c4aedaf1fc986cbc6ed0d4b48004cbb4",
+        "version": "1004a3f442882d76d2f719dc664ae67e40ea95c9c5b163d3fc5d1ca0ff8406f4",
+        "signature": "20e5e2ac23e4335ae31a34e5bade2475f2c03e952c5ae66d6cc4b6625b6e071f",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {
@@ -852,8 +852,8 @@
         "affectsGlobalScope": false
       },
       "../src/lib/client.ts": {
-        "version": "90967f1e736d8c10034b9d6dd6306a2785532b821f34346c48d81a9c84a6a753",
-        "signature": "349644b4c0d8b4195357780cd8f2b1a1a45a71f04a238e7d5d57d00304953072",
+        "version": "81697ca5ee18f44e2099ca682ddeb61324075a15abb760a78285afe66d8eb1a2",
+        "signature": "260a079c284b9c6c9955d6888be4c1d8988240980794ab49ad38c3b38baaa31a",
         "affectsGlobalScope": false
       },
       "../node_modules/ava/index.d.ts": {
@@ -863,6 +863,11 @@
       },
       "../src/lib/number.spec.ts": {
         "version": "374474d3b0eb8552ed4d58188949196cb939b2657907df03c175758a40b7935a",
+        "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+        "affectsGlobalScope": false
+      },
+      "../src/tests/test_playground.ts": {
+        "version": "1a77ddbb2b0aa873d4c2dbb3f7beed15e2eae52e5e325b16f98161de5aa7cc6d",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -1810,6 +1815,10 @@
       ],
       "../src/lib/number.ts": [
         "../node_modules/@types/node/util.d.ts"
+      ],
+      "../src/tests/test_playground.ts": [
+        "../node_modules/@types/node/util.d.ts",
+        "../src/lib/client.ts"
       ],
       "../src/types/example.d.ts": [
         "../node_modules/@types/node/util.d.ts"
@@ -2883,6 +2892,36 @@
       "../src/lib/controller.ts",
       "../src/lib/number.spec.ts",
       "../src/lib/number.ts",
+      [
+        "../src/tests/test_playground.ts",
+        [
+          {
+            "file": "../src/tests/test_playground.ts",
+            "start": 0,
+            "length": 34,
+            "messageText": "'Client' is declared but its value is never read.",
+            "category": 1,
+            "code": 6133,
+            "reportsUnnecessary": true
+          },
+          {
+            "file": "../src/tests/test_playground.ts",
+            "start": 7,
+            "length": 6,
+            "messageText": "Module '\"/Users/gregoryneut/work/uxd-evm-client/src/lib/client\"' has no default export.",
+            "category": 1,
+            "code": 1192
+          },
+          {
+            "file": "../src/tests/test_playground.ts",
+            "start": 36,
+            "length": 2,
+            "messageText": "Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i @types/jest` or `npm i @types/mocha` and then add `jest` or `mocha` to the types field in your tsconfig.",
+            "category": 1,
+            "code": 2593
+          }
+        ]
+      ],
       "../src/types/example.d.ts"
     ]
   },
