@@ -15,6 +15,7 @@ export class UXDController {
   // internal contracts
   private controllerContract: any;
   private uxdContract: any;
+  private market: string;
 
   // clients can listen to events on these subjects
   public mintSubject: Subject<any> = new Subject<any>();
@@ -25,7 +26,9 @@ export class UXDController {
   constructor(
       private provider: ethers.providers.JsonRpcProvider, 
       controllerAddress: string,
-      uxdTokenAddress: string) {
+      uxdTokenAddress: string,
+      market: string
+    ) {
     this.controllerContract = new ethers.Contract(
       controllerAddress,
       Controller.abi,
@@ -36,18 +39,18 @@ export class UXDController {
         ERC20.abi,
         provider
     );
+    this.market = market;
     this.registerEventListeners();
   }
 
   public async mint(
-      market: string, 
       collateral: string, 
       ethAmount: BigNumber,
       slippage: BigNumber,
       signer: Signer
     ): Promise<any> {
     return await this.controllerContract.connect(signer).mint(
-      market, 
+      this.market, 
       collateral, 
       ethAmount, 
       slippage
@@ -55,14 +58,13 @@ export class UXDController {
   }
 
   public async redeem(
-      market: string, 
       collateral: string, 
       uxdAmount: BigNumber,
       slippage: BigNumber,
       signer: Signer
     ): Promise<any> {
     return await this.controllerContract.connect(signer).redeem(
-      market, 
+      this.market, 
       collateral, 
       uxdAmount, 
       slippage
@@ -70,25 +72,23 @@ export class UXDController {
   }
 
   public async mintWithEth(
-    market: string,
     ethAmount: BigNumber,
     slippage: BigNumber,
     signer: Signer
   ) {
     return await this.controllerContract.connect(signer).mintWithEth(
-      market, 
+      this.market, 
       slippage, 
       {value: ethAmount}
     );
   }
 
   public async redeemEth(
-    market: string,
     uxdAmount: BigNumber,
     slippage: BigNumber,
     signer: Signer
   ) {
-    return await this.controllerContract.connect(signer).redeemEth(market, uxdAmount, slippage);
+    return await this.controllerContract.connect(signer).redeemEth(this.market, uxdAmount, slippage);
   }
 
   public async getCollateralInfo(): Promise<CollateralInfo> {

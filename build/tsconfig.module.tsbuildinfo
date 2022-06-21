@@ -842,8 +842,8 @@
         "affectsGlobalScope": true
       },
       "../src/lib/controller.ts": {
-        "version": "9c987f3f55e0148bc4600bf3c284c0e0c4da2ef3e2f63e7ada81e43e79cd7ad6",
-        "signature": "c90b962e0d844cc05428695588d9c8e6c4aedaf1fc986cbc6ed0d4b48004cbb4",
+        "version": "fd74fcbc4048702ace29c88ede362ec1b297eb26744aa88b24a8d15833e18b7d",
+        "signature": "e3fb8a33f0e14943a7aa802c9d9dc09c96f08149d1deef53733d53383213967f",
         "affectsGlobalScope": false
       },
       "../src/index.ts": {
@@ -852,8 +852,8 @@
         "affectsGlobalScope": false
       },
       "../src/lib/client.ts": {
-        "version": "90967f1e736d8c10034b9d6dd6306a2785532b821f34346c48d81a9c84a6a753",
-        "signature": "349644b4c0d8b4195357780cd8f2b1a1a45a71f04a238e7d5d57d00304953072",
+        "version": "2214cab0e2ce9a36eb8e51d4b9ac1bd2f9298bb06bc09a809597b40d9e25199a",
+        "signature": "67bd5db9012acdde7ed78165262b4ec48cc07c964ee0746891cd6a3e440d47af",
         "affectsGlobalScope": false
       },
       "../node_modules/ava/index.d.ts": {

@@ -7,12 +7,14 @@ export class UXDClient {
     constructor(
         provider: ethers.providers.JsonRpcProvider, 
         controllerAddress: string, 
-        uxdTokenAddress: string
+        uxdTokenAddress: string,
+        market: string
         ) {
         this.controller = new UXDController(
             provider,
             controllerAddress,
-            uxdTokenAddress
+            uxdTokenAddress,
+            market
         )
     }
 
