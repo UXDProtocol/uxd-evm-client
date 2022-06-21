@@ -1,4 +1,4 @@
-import { BigNumber, ethers, Signer } from 'ethers';
+import { BigNumber, Contract, providers, Signer } from 'ethers';
 import { Subject } from 'rxjs';
 export interface CollateralInfo {
     symbol?: string;
@@ -7,14 +7,18 @@ export interface CollateralInfo {
     minted: BigNumber;
 }
 export declare class UXDController {
-    private provider;
-    private controllerContract;
-    private uxdContract;
+    protected provider: providers.JsonRpcProvider;
+    protected controllerContract: Contract;
+    protected uxdContract: Contract;
     mintSubject: Subject<any>;
     redeemSubject: Subject<any>;
     uxdApprovalSubject: Subject<any>;
     uxdTransferSubject: Subject<any>;
-    constructor(provider: ethers.providers.JsonRpcProvider, controllerAddress: string, uxdTokenAddress: string);
+    constructor({ provider, controllerAddress, uxdTokenAddress, }: {
+        provider: providers.JsonRpcProvider;
+        controllerAddress: string;
+        uxdTokenAddress: string;
+    });
     mint(market: string, collateral: string, ethAmount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
     redeem(market: string, collateral: string, uxdAmount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;
     mintWithEth(market: string, ethAmount: BigNumber, slippage: BigNumber, signer: Signer): Promise<any>;

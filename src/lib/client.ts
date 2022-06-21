@@ -1,19 +1,23 @@
-import { ethers } from "ethers"
-import { UXDController } from "./controller"
+import { providers } from "ethers"
+import { UXDController } from "./UXDController"
 
 export class UXDClient {
-    private controller: UXDController
+    protected readonly controller: UXDController;
 
-    constructor(
-        provider: ethers.providers.JsonRpcProvider, 
-        controllerAddress: string, 
-        uxdTokenAddress: string
-        ) {
-        this.controller = new UXDController(
+    constructor({
+        provider,
+        controllerAddress,
+        uxdTokenAddress
+    }: {
+        provider: providers.JsonRpcProvider;
+        controllerAddress: string;
+        uxdTokenAddress: string;
+    }) {
+        this.controller = new UXDController({
             provider,
             controllerAddress,
             uxdTokenAddress
-        )
+        });
     }
 
     // TODO: more 

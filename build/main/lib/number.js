@@ -22,9 +22,10 @@ exports.power = exports.double = void 0;
  * @returns Comment describing the return type.
  * @anotherNote Some other value.
  */
-exports.double = (value) => {
+const double = (value) => {
     return value * 2;
 };
+exports.double = double;
 /**
  * Raise the value of the first parameter to the power of the second using the
  * es7 exponentiation operator (`**`).
@@ -45,10 +46,11 @@ exports.double = (value) => {
  * @param base - the base to exponentiate
  * @param exponent - the power to which to raise the base
  */
-exports.power = (base, exponent) => {
+const power = (base, exponent) => {
     /**
      * This es7 exponentiation operator is transpiled by TypeScript
      */
     return base ** exponent;
 };
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibnVtYmVyLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vc3JjL2xpYi9udW1iZXIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0dBb0JHO0FBQ1UsUUFBQSxNQUFNLEdBQUcsQ0FBQyxLQUFhLEVBQUUsRUFBRTtJQUN0QyxPQUFPLEtBQUssR0FBRyxDQUFDLENBQUM7QUFDbkIsQ0FBQyxDQUFDO0FBRUY7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7R0FtQkc7QUFDVSxRQUFBLEtBQUssR0FBRyxDQUFDLElBQVksRUFBRSxRQUFnQixFQUFFLEVBQUU7SUFDdEQ7O09BRUc7SUFDSCxPQUFPLElBQUksSUFBSSxRQUFRLENBQUM7QUFDMUIsQ0FBQyxDQUFDIn0=
+exports.power = power;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibnVtYmVyLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vc3JjL2xpYi9udW1iZXIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUE7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0dBb0JHO0FBQ0ksTUFBTSxNQUFNLEdBQUcsQ0FBQyxLQUFhLEVBQUUsRUFBRTtJQUN0QyxPQUFPLEtBQUssR0FBRyxDQUFDLENBQUM7QUFDbkIsQ0FBQyxDQUFDO0FBRlcsUUFBQSxNQUFNLFVBRWpCO0FBRUY7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7R0FtQkc7QUFDSSxNQUFNLEtBQUssR0FBRyxDQUFDLElBQVksRUFBRSxRQUFnQixFQUFFLEVBQUU7SUFDdEQ7O09BRUc7SUFDSCxPQUFPLElBQUksSUFBSSxRQUFRLENBQUM7QUFDMUIsQ0FBQyxDQUFDO0FBTFcsUUFBQSxLQUFLLFNBS2hCIn0=
