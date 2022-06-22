@@ -1,5 +1,5 @@
 import { providers } from "ethers";
-import { UXDController } from "./controller";
+import { UXDController } from "./UXDController";
 export declare class UXDClient {
     protected readonly controller: UXDController;
     constructor({ provider, controllerAddress, uxdTokenAddress }: {
