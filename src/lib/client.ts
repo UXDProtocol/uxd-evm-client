@@ -7,16 +7,19 @@ export class UXDClient {
     constructor({
         provider,
         controllerAddress,
-        uxdTokenAddress
+        uxdTokenAddress,
+        market
     }: {
         provider: providers.JsonRpcProvider;
         controllerAddress: string;
         uxdTokenAddress: string;
+        market: string;
     }) {
         this.controller = new UXDController({
             provider,
             controllerAddress,
-            uxdTokenAddress
+            uxdTokenAddress,
+            market
         });
     }
 

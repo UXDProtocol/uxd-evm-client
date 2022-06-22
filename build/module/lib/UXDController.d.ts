@@ -12,65 +12,57 @@ export declare class UXDController {
     protected provider: providers.Provider;
     protected controllerContract: UXDControllerContract;
     protected uxdContract: ERC20Contract;
+    private market;
     readonly mintSubject: Subject<MintedEventObject>;
     readonly redeemSubject: Subject<RedeemedEventObject>;
     readonly uxdApprovalSubject: Subject<ApprovalEventObject>;
     readonly uxdTransferSubject: Subject<TransferEventObject>;
-    constructor({ provider, controllerAddress, uxdTokenAddress, }: {
+    constructor({ provider, controllerAddress, uxdTokenAddress, market }: {
         provider: providers.Provider;
         controllerAddress: string;
         uxdTokenAddress: string;
+        market: string;
     });
-    mint({ market, collateral, ethAmount, slippage, signer, }: {
-        market: string;
-        collateral: string;
-        ethAmount: BigNumber;
-        slippage: BigNumber;
+    mint({ amount, slippage, signer, collateralToken, }: {
+        amount: number;
+        slippage: number;
         signer: Signer;
+        collateralToken?: string;
     }): Promise<ContractTransaction>;
-    redeem({ market, collateral, uxdAmount, slippage, signer, }: {
-        market: string;
-        collateral: string;
-        uxdAmount: BigNumber;
-        slippage: BigNumber;
+    private mintWithERC20;
+    private mintWithETH;
+    redeem({ amount, slippage, signer, collateralToken, }: {
+        amount: number;
+        slippage: number;
         signer: Signer;
+        collateralToken: string;
     }): Promise<ContractTransaction>;
-    mintWithEth({ market, ethAmount, slippage, signer, }: {
-        market: string;
-        ethAmount: BigNumber;
-        slippage: BigNumber;
-        signer: Signer;
-    }): Promise<ContractTransaction>;
-    redeemEth({ market, uxdAmount, slippage, signer, }: {
-        market: string;
-        uxdAmount: BigNumber;
-        slippage: BigNumber;
-        signer: Signer;
-    }): Promise<ContractTransaction>;
+    private redeemERC20;
+    private redeemEth;
     getCollateralInfo(): Promise<UXDControllerNamespace.CollateralInfoStructOutput[]>;
     approveUXD({ spender, amount, signer, }: {
         spender: string;
-        amount: BigNumber;
+        amount: number;
         signer: Signer;
     }): Promise<ContractTransaction>;
     approveToken({ contractAddress, spender, amount, signer, }: {
         contractAddress: string;
         spender: string;
-        amount: BigNumber;
+        amount: number;
         signer: Signer;
     }): Promise<ContractTransaction>;
     allowance({ contractAddress, account, spender, }: {
         contractAddress: string;
         account: string;
         spender: string;
-    }): Promise<BigNumber>;
+    }): Promise<number>;
     tokenBalance({ contractAddress, account, }: {
         contractAddress: string;
         account: string;
-    }): Promise<BigNumber>;
-    uxdTotalSupply(): Promise<BigNumber>;
-    mintedPerCollateral(token: string): Promise<BigNumber>;
-    redeemable(token: string): Promise<BigNumber>;
+    }): Promise<number>;
+    uxdTotalSupply(): Promise<number>;
+    mintedPerCollateral(token: string): Promise<number>;
+    getRedeemableCollateral(token: string): Promise<number>;
     protected arrayToObject<T extends Object>(keys: (keyof T)[], values: unknown[]): T;
     protected registerEventListener<T>(contract: Contract, eventName: string, subject: Subject<T>, keys: (keyof T)[]): void;
     protected registerEventListeners(): void;
