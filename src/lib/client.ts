@@ -1,30 +1,30 @@
-import { providers } from "ethers"
-import { UXDController } from "./UXDController"
+import { providers } from 'ethers';
+import { UXDController } from './UXDController';
 
 export class UXDClient {
-    protected readonly controller: UXDController;
+  protected readonly controller: UXDController;
 
-    constructor({
-        provider,
-        controllerAddress,
-        uxdTokenAddress,
-        market
-    }: {
-        provider: providers.JsonRpcProvider;
-        controllerAddress: string;
-        uxdTokenAddress: string;
-        market: string;
-    }) {
-        this.controller = new UXDController({
-            provider,
-            controllerAddress,
-            uxdTokenAddress,
-            market
-        });
-    }
+  constructor({
+    provider,
+    controller,
+    uxdToken,
+    market,
+  }: {
+    provider: providers.JsonRpcProvider;
+    controller: string;
+    uxdToken: string;
+    market: string;
+  }) {
+    this.controller = new UXDController({
+      provider,
+      controller,
+      uxdToken,
+      market,
+    });
+  }
 
-    // TODO: more 
-    public getController(): UXDController {
-        return this.controller;
-    }
+  // TODO: more
+  public getController(): UXDController {
+    return this.controller;
+  }
 }

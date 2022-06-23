@@ -1,6 +1,21 @@
-import { BigNumber, Contract, ContractTransaction, ethers, providers, Signer } from 'ethers';
-import { MintedEventObject, RedeemedEventObject, UXDControllerContract, UXDController as UXDControllerNamespace } from '../artifacts/types/UXDController';
-import { ERC20 as ERC20Contract, ApprovalEventObject, TransferEventObject } from '../artifacts/types/ERC20';
+import {
+  BigNumber,
+  Contract,
+  ContractTransaction,
+  ethers,
+  providers,
+  Signer,
+} from 'ethers';
+import {
+  MintedEventObject,
+  RedeemedEventObject,
+  UXDControllerContract,
+} from '../artifacts/types/UXDController';
+import {
+  ERC20 as ERC20Contract,
+  ApprovalEventObject,
+  TransferEventObject,
+} from '../artifacts/types/ERC20';
 import { Subject } from 'rxjs';
 import { ERC20__factory, UXDController__factory } from '../artifacts/types';
 
@@ -22,31 +37,38 @@ export class UXDController {
   private market: string;
 
   // clients can listen to events on these subjects
-  public readonly mintSubject: Subject<MintedEventObject> = new Subject<MintedEventObject>();
-  public readonly redeemSubject: Subject<RedeemedEventObject> = new Subject<RedeemedEventObject>();
-  public readonly uxdApprovalSubject: Subject<ApprovalEventObject> = new Subject<ApprovalEventObject>();
-  public readonly uxdTransferSubject: Subject<TransferEventObject> = new Subject<TransferEventObject>();
+  public readonly mintSubject: Subject<MintedEventObject> =
+    new Subject<MintedEventObject>();
+  public readonly redeemSubject: Subject<RedeemedEventObject> =
+    new Subject<RedeemedEventObject>();
+  public readonly uxdApprovalSubject: Subject<ApprovalEventObject> =
+    new Subject<ApprovalEventObject>();
+  public readonly uxdTransferSubject: Subject<TransferEventObject> =
+    new Subject<TransferEventObject>();
 
   constructor({
     provider,
-    controllerAddress,
-    uxdTokenAddress,
-    market
+    controller,
+    uxdToken,
+    market,
   }: {
     provider: providers.Provider;
-    controllerAddress: string;
-    uxdTokenAddress: string;
+    controller: string;
+    uxdToken: string;
     market: string;
   }) {
     this.provider = provider;
     this.market = market;
-    this.controllerContract = UXDController__factory.connect(controllerAddress, this.provider);
-    this.uxdContract = ERC20__factory.connect(uxdTokenAddress, this.provider);
+    this.controllerContract = UXDController__factory.connect(
+      controller,
+      this.provider
+    );
+    this.uxdContract = ERC20__factory.connect(uxdToken, this.provider);
 
     this.registerEventListeners();
   }
 
-  public async mint({
+  public mint({
     amount,
     slippage,
     signer,
@@ -60,21 +82,21 @@ export class UXDController {
     const ethAmount = ethers.utils.parseEther(amount.toString());
     const ethSlippage = ethers.utils.parseEther(slippage.toString());
     if (collateralToken) {
-      return await this.mintWithERC20(
+      return this.mintWithERC20(
         ethAmount,
         ethSlippage,
         signer,
-        collateralToken,
+        collateralToken
       );
     }
-    return await this.mintWithETH(ethAmount, ethSlippage, signer);
+    return this.mintWithETH(ethAmount, ethSlippage, signer);
   }
 
   private mintWithERC20(
     ethAmount: BigNumber,
     ethSlippage: BigNumber,
     signer: Signer,
-    collateral: string,
+    collateral: string
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
@@ -91,7 +113,7 @@ export class UXDController {
       .mintWithEth(this.market, ethSlippage, { value: ethAmount });
   }
 
-  public async redeem({
+  public redeem({
     amount,
     slippage,
     signer,
@@ -105,21 +127,27 @@ export class UXDController {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
     const slippageAmount = ethers.utils.parseEther(slippage.toString());
     if (collateralToken) {
-      return await this.redeemERC20(uxdAmount, slippageAmount, signer, collateralToken)
+      return this.redeemERC20(
+        uxdAmount,
+        slippageAmount,
+        signer,
+        collateralToken
+      );
     }
-    return await this.redeemEth(uxdAmount, slippageAmount, signer);
+    return this.redeemEth(uxdAmount, slippageAmount, signer);
   }
 
   private redeemERC20(
     uxdAmount: BigNumber,
     slippageAmount: BigNumber,
     signer: Signer,
-    collateral: string,
+    collateral: string
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
       .redeem(this.market, collateral, uxdAmount, slippageAmount);
   }
+
   private redeemEth(
     uxdAmount: BigNumber,
     slippageAmount: BigNumber,
@@ -128,11 +156,6 @@ export class UXDController {
     return this.controllerContract
       .connect(signer)
       .redeemEth(this.market, uxdAmount, slippageAmount);
-  }
-
-  // ???Rework returned infos???
-  public getCollateralInfo(): Promise<UXDControllerNamespace.CollateralInfoStructOutput[]> {
-    return this.controllerContract.getCollateralInfo();
   }
 
   public approveUXD({
@@ -160,7 +183,9 @@ export class UXDController {
     signer: Signer;
   }): Promise<ContractTransaction> {
     const ethAmount = ethers.utils.parseEther(amount.toString());
-    return ERC20__factory.connect(contractAddress, signer).connect(signer).approve(spender, ethAmount);
+    return ERC20__factory.connect(contractAddress, signer)
+      .connect(signer)
+      .approve(spender, ethAmount);
   }
 
   public async allowance({
@@ -172,7 +197,10 @@ export class UXDController {
     account: string;
     spender: string;
   }): Promise<number> {
-    const allowance = await ERC20__factory.connect(contractAddress, this.provider).allowance(account, spender);
+    const allowance = await ERC20__factory.connect(
+      contractAddress,
+      this.provider
+    ).allowance(account, spender);
     return Number(ethers.utils.formatEther(allowance));
   }
 
@@ -183,7 +211,10 @@ export class UXDController {
     contractAddress: string;
     account: string;
   }): Promise<number> {
-    const balance = await ERC20__factory.connect(contractAddress, this.provider).balanceOf(account);
+    const balance = await ERC20__factory.connect(
+      contractAddress,
+      this.provider
+    ).balanceOf(account);
     return Number(ethers.utils.formatEther(balance));
   }
 
@@ -194,7 +225,7 @@ export class UXDController {
 
   public async mintedPerCollateral(token: string): Promise<number> {
     const minted = await this.controllerContract.mintedPerCollateral(token);
-    return Number(ethers.utils.formatEther(minted));;
+    return Number(ethers.utils.formatEther(minted));
   }
 
   public async getRedeemableCollateral(token: string): Promise<number> {
@@ -206,21 +237,52 @@ export class UXDController {
 
   // Transform values in an array into an object with named attributes
   // Use the position of the key and the value to match
-  protected arrayToObject<T extends Object>(keys: (keyof T)[], values: unknown[]): T {
-    return keys.reduce((obj, value, index) => obj[value] = values[index] as any, {} as T);
+  protected arrayToObject<T extends Object>(
+    keys: (keyof T)[],
+    values: unknown[]
+  ): T {
+    return keys.reduce(
+      (obj, value, index) => (obj[value] = values[index] as any),
+      {} as T
+    );
   }
 
   // Utility function that converts an event object received from the contract to a subject
-  protected registerEventListener<T>(contract: Contract, eventName: string, subject: Subject<T>, keys: (keyof T)[]): void {
+  protected registerEventListener<T>(
+    contract: Contract,
+    eventName: string,
+    subject: Subject<T>,
+    keys: (keyof T)[]
+  ): void {
     contract.on(eventName, async (args) => {
       subject.next(this.arrayToObject(keys, args));
     });
   }
 
   protected registerEventListeners() {
-    this.registerEventListener<MintedEventObject>(this.controllerContract, 'Minted', this.mintSubject, ['account', 'base', 'quote']);
-    this.registerEventListener<RedeemedEventObject>(this.controllerContract, 'Redeemed', this.redeemSubject, ['account', 'base', 'quote']);
-    this.registerEventListener<ApprovalEventObject>(this.uxdContract, 'Approval', this.uxdApprovalSubject, ['owner', 'spender', 'value']);
-    this.registerEventListener<TransferEventObject>(this.uxdContract, 'Transfer', this.uxdTransferSubject, ['from', 'to', 'value']);
+    this.registerEventListener<MintedEventObject>(
+      this.controllerContract,
+      'Minted',
+      this.mintSubject,
+      ['account', 'base', 'quote']
+    );
+    this.registerEventListener<RedeemedEventObject>(
+      this.controllerContract,
+      'Redeemed',
+      this.redeemSubject,
+      ['account', 'base', 'quote']
+    );
+    this.registerEventListener<ApprovalEventObject>(
+      this.uxdContract,
+      'Approval',
+      this.uxdApprovalSubject,
+      ['owner', 'spender', 'value']
+    );
+    this.registerEventListener<TransferEventObject>(
+      this.uxdContract,
+      'Transfer',
+      this.uxdTransferSubject,
+      ['from', 'to', 'value']
+    );
   }
 }
