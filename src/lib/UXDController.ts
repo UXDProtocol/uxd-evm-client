@@ -59,37 +59,34 @@ export class UXDController {
   }): Promise<ContractTransaction> {
     const ethAmount = ethers.utils.parseEther(amount.toString());
     const ethSlippage = ethers.utils.parseEther(slippage.toString());
-    if (arguments.length == 4) {
+    if (collateralToken) {
       return await this.mintWithERC20(
         ethAmount,
         ethSlippage,
         signer,
         collateralToken,
       );
-    } else if (arguments.length == 3) {
-      return await this.mintWithETH(ethAmount, ethSlippage, signer);
-    } else {
-      throw Error("Invalid number of arguments");
     }
+    return await this.mintWithETH(ethAmount, ethSlippage, signer);
   }
 
-  private async mintWithERC20(
+  private mintWithERC20(
     ethAmount: BigNumber,
     ethSlippage: BigNumber,
     signer: Signer,
     collateral: string,
   ): Promise<ContractTransaction> {
-    return await this.controllerContract
+    return this.controllerContract
       .connect(signer)
       .mint(this.market, collateral, ethAmount, ethSlippage);
   }
 
-  private async mintWithETH(
+  private mintWithETH(
     ethAmount: BigNumber,
     ethSlippage: BigNumber,
     signer: Signer
   ): Promise<ContractTransaction> {
-    return await this.controllerContract
+    return this.controllerContract
       .connect(signer)
       .mintWithEth(this.market, ethSlippage, { value: ethAmount });
   }
@@ -107,41 +104,38 @@ export class UXDController {
   }): Promise<ContractTransaction> {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
     const slippageAmount = ethers.utils.parseEther(slippage.toString());
-    if (arguments.length == 4) {
+    if (collateralToken) {
       return await this.redeemERC20(uxdAmount, slippageAmount, signer, collateralToken)
-    } else if (arguments.length == 3) {
-      return await this.redeemEth(uxdAmount, slippageAmount, signer);
-    } else {
-      throw Error("Invalid number of arguments");
     }
+    return await this.redeemEth(uxdAmount, slippageAmount, signer);
   }
 
-  private async redeemERC20(
+  private redeemERC20(
     uxdAmount: BigNumber,
     slippageAmount: BigNumber,
     signer: Signer,
     collateral: string,
   ): Promise<ContractTransaction> {
-    return await this.controllerContract
+    return this.controllerContract
       .connect(signer)
       .redeem(this.market, collateral, uxdAmount, slippageAmount);
   }
-  private async redeemEth(
+  private redeemEth(
     uxdAmount: BigNumber,
     slippageAmount: BigNumber,
     signer: Signer
   ): Promise<ContractTransaction> {
-    return await this.controllerContract
+    return this.controllerContract
       .connect(signer)
       .redeemEth(this.market, uxdAmount, slippageAmount);
   }
 
   // ???Rework returned infos???
-  public async getCollateralInfo(): Promise<UXDControllerNamespace.CollateralInfoStructOutput[]> {
+  public getCollateralInfo(): Promise<UXDControllerNamespace.CollateralInfoStructOutput[]> {
     return this.controllerContract.getCollateralInfo();
   }
 
-  public async approveUXD({
+  public approveUXD({
     spender,
     amount,
     signer,
@@ -151,10 +145,10 @@ export class UXDController {
     signer: Signer;
   }): Promise<ContractTransaction> {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
-    return await this.uxdContract.connect(signer).approve(spender, uxdAmount);
+    return this.uxdContract.connect(signer).approve(spender, uxdAmount);
   }
 
-  public async approveToken({
+  public approveToken({
     contractAddress,
     spender,
     amount,
@@ -166,7 +160,7 @@ export class UXDController {
     signer: Signer;
   }): Promise<ContractTransaction> {
     const ethAmount = ethers.utils.parseEther(amount.toString());
-    return await ERC20__factory.connect(contractAddress, signer).connect(signer).approve(spender, ethAmount);
+    return ERC20__factory.connect(contractAddress, signer).connect(signer).approve(spender, ethAmount);
   }
 
   public async allowance({
