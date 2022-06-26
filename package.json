@@ -5,7 +5,7 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/WarTech9/uxd-evm-client",
+  "repository": "https://github.com/UXDProtocol/uxd-evm-client",
   "license": "MIT",
   "keywords": [],
   "scripts": {
@@ -42,7 +42,9 @@
     "node": ">=10"
   },
   "dependencies": {
+    "@perp/sdk-curie": "^1.6.1-canary.0",
     "@typechain/ethers-v5": "^10.1.0",
+    "bignumber.js": "^9.0.2",
     "ethers": "^5.6.8",
     "rxjs": "^7.5.5"
   },
