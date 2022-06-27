@@ -49,12 +49,12 @@ export class UXDController {
   constructor({
     provider,
     controller,
-    uxdToken,
+    redeemable,
     market,
   }: {
     provider: providers.Provider;
     controller: string;
-    uxdToken: string;
+    redeemable: string;
     market: string;
   }) {
     this.provider = provider;
@@ -63,7 +63,7 @@ export class UXDController {
       controller,
       this.provider
     );
-    this.uxdContract = ERC20__factory.connect(uxdToken, this.provider);
+    this.uxdContract = ERC20__factory.connect(redeemable, this.provider);
 
     this.registerEventListeners();
   }
