@@ -72,21 +72,21 @@ export class UXDController {
     amount,
     slippage,
     signer,
-    collateralToken,
+    collateral,
   }: {
     amount: number;
     slippage: number;
     signer: Signer;
-    collateralToken?: string;
+    collateral?: string;
   }): Promise<ContractTransaction> {
     const ethAmount = ethers.utils.parseEther(amount.toString());
     const ethSlippage = ethers.utils.parseEther(slippage.toString());
-    if (collateralToken) {
+    if (collateral) {
       return this.mintWithERC20(
         ethAmount,
         ethSlippage,
         signer,
-        collateralToken
+        collateral
       );
     }
     return this.mintWithETH(ethAmount, ethSlippage, signer);
@@ -117,21 +117,21 @@ export class UXDController {
     amount,
     slippage,
     signer,
-    collateralToken,
+    collateral,
   }: {
     amount: number;
     slippage: number;
     signer: Signer;
-    collateralToken: string;
+    collateral: string;
   }): Promise<ContractTransaction> {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
     const slippageAmount = ethers.utils.parseEther(slippage.toString());
-    if (collateralToken) {
+    if (collateral) {
       return this.redeemERC20(
         uxdAmount,
         slippageAmount,
         signer,
-        collateralToken
+        collateral
       );
     }
     return this.redeemEth(uxdAmount, slippageAmount, signer);
@@ -218,7 +218,7 @@ export class UXDController {
     return Number(ethers.utils.formatEther(balance));
   }
 
-  public async uxdTotalSupply(): Promise<number> {
+  public async getRedeemableMintCirculatingSupply(): Promise<number> {
     const totalSupply = await this.uxdContract.totalSupply();
     return Number(ethers.utils.formatEther(totalSupply));
   }
@@ -228,7 +228,7 @@ export class UXDController {
     return Number(ethers.utils.formatEther(minted));
   }
 
-  public async getRedeemableCollateral(token: string): Promise<number> {
+  public async getDepositedCollateralAmount(token: string): Promise<number> {
     const redeemable = await this.controllerContract.redeemable(token);
     return Number(ethers.utils.formatEther(redeemable));
   }
