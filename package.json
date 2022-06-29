@@ -1,6 +1,6 @@
 {
   "name": "uxd-evm-client",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1-beta.5",
   "description": "UXD EVM client",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
