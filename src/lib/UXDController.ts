@@ -64,8 +64,6 @@ export class UXDController {
       this.provider
     );
     this.uxdContract = ERC20__factory.connect(redeemable, this.provider);
-
-    this.registerEventListeners();
   }
 
   public mint({
@@ -82,12 +80,7 @@ export class UXDController {
     const ethAmount = ethers.utils.parseEther(amount.toString());
     const ethSlippage = ethers.utils.parseEther(slippage.toString());
     if (collateral) {
-      return this.mintWithERC20(
-        ethAmount,
-        ethSlippage,
-        signer,
-        collateral
-      );
+      return this.mintWithERC20(ethAmount, ethSlippage, signer, collateral);
     }
     return this.mintWithETH(ethAmount, ethSlippage, signer);
   }
@@ -122,17 +115,12 @@ export class UXDController {
     amount: number;
     slippage: number;
     signer: Signer;
-    collateral: string;
+    collateral?: string;
   }): Promise<ContractTransaction> {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
     const slippageAmount = ethers.utils.parseEther(slippage.toString());
     if (collateral) {
-      return this.redeemERC20(
-        uxdAmount,
-        slippageAmount,
-        signer,
-        collateral
-      );
+      return this.redeemERC20(uxdAmount, slippageAmount, signer, collateral);
     }
     return this.redeemEth(uxdAmount, slippageAmount, signer);
   }
