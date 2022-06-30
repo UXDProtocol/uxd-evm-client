@@ -1,5 +1,5 @@
-import { providers } from 'ethers';
-import { UXDController } from './UXDController';
+import { providers } from "ethers";
+import { UXDController } from "./UXDController";
 
 export class UXDClient {
   protected readonly controller: UXDController;
