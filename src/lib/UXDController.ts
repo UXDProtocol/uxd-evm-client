@@ -5,19 +5,19 @@ import {
   ethers,
   providers,
   Signer,
-} from 'ethers';
+} from "ethers";
 import {
   MintedEventObject,
   RedeemedEventObject,
   UXDControllerContract,
-} from '../artifacts/types/UXDController';
+} from "../artifacts/types/UXDController";
 import {
   ERC20 as ERC20Contract,
   ApprovalEventObject,
   TransferEventObject,
-} from '../artifacts/types/ERC20';
-import { Subject } from 'rxjs';
-import { ERC20__factory, UXDController__factory } from '../artifacts/types';
+} from "../artifacts/types/ERC20";
+import { Subject } from "rxjs";
+import { ERC20__factory, UXDController__factory } from "../artifacts/types";
 
 export interface CollateralInfo {
   symbol?: string;
@@ -225,24 +225,28 @@ export class UXDController {
 
   // Transform values in an array into an object with named attributes
   // Use the position of the key and the value to match
-  protected arrayToObject<T extends Object>(
-    keys: (keyof T)[],
-    values: unknown[]
-  ): T {
+  protected arrayToObject<T>(keys: (keyof T)[], values: unknown[]): T {
     return keys.reduce(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (obj, value, index) => (obj[value] = values[index] as any),
       {} as T
     );
   }
 
   // Utility function that converts an event object received from the contract to a subject
-  protected registerEventListener<T>(
+  protected registerEventListener<
+    T =
+      | MintedEventObject
+      | RedeemedEventObject
+      | ApprovalEventObject
+      | TransferEventObject
+  >(
     contract: Contract,
     eventName: string,
     subject: Subject<T>,
     keys: (keyof T)[]
   ): void {
-    contract.on(eventName, async (args) => {
+    contract.on(eventName, (args) => {
       subject.next(this.arrayToObject(keys, args));
     });
   }
@@ -250,27 +254,27 @@ export class UXDController {
   protected registerEventListeners() {
     this.registerEventListener<MintedEventObject>(
       this.controllerContract,
-      'Minted',
+      "Minted",
       this.mintSubject,
-      ['account', 'base', 'quote']
+      ["account", "base", "quote"]
     );
     this.registerEventListener<RedeemedEventObject>(
       this.controllerContract,
-      'Redeemed',
+      "Redeemed",
       this.redeemSubject,
-      ['account', 'base', 'quote']
+      ["account", "base", "quote"]
     );
     this.registerEventListener<ApprovalEventObject>(
       this.uxdContract,
-      'Approval',
+      "Approval",
       this.uxdApprovalSubject,
-      ['owner', 'spender', 'value']
+      ["owner", "spender", "value"]
     );
     this.registerEventListener<TransferEventObject>(
       this.uxdContract,
-      'Transfer',
+      "Transfer",
       this.uxdTransferSubject,
-      ['from', 'to', 'value']
+      ["from", "to", "value"]
     );
   }
 }
