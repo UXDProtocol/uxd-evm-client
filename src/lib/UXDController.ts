@@ -18,7 +18,7 @@ import {
   TransferEventObject,
 } from "../artifacts/types/ERC20";
 import { ERC20__factory, UXDController__factory } from "../artifacts/types";
-import { encodePriceSqrt } from './priceEncoder';
+import { encodePriceSqrt } from "./priceEncoder";
 
 export interface CollateralInfo {
   symbol?: string;
@@ -81,12 +81,7 @@ export class UXDController {
     const ethAmount = ethers.utils.parseEther(amount.toString());
     const targetPriceX96 = encodePriceSqrt(BigNumber.from(targetPrice));
     if (collateral) {
-      return this.mintWithERC20(
-        ethAmount,
-        targetPriceX96,
-        signer,
-        collateral
-      );
+      return this.mintWithERC20(ethAmount, targetPriceX96, signer, collateral);
     }
     return this.mintWithETH(ethAmount, targetPriceX96, signer);
   }
@@ -126,12 +121,7 @@ export class UXDController {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
     const targetPriceX96 = encodePriceSqrt(BigNumber.from(targetPrice));
     if (collateral) {
-      return this.redeemERC20(
-        uxdAmount,
-        targetPriceX96,
-        signer,
-        collateral
-      );
+      return this.redeemERC20(uxdAmount, targetPriceX96, signer, collateral);
     }
     return this.redeemEth(uxdAmount, targetPriceX96, signer);
   }
