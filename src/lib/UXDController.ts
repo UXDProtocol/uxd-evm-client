@@ -79,7 +79,7 @@ export class UXDController {
     collateral?: string;
   }): Promise<ContractTransaction> {
     const ethAmount = ethers.utils.parseEther(amount.toString());
-    const targetPriceX96 = encodePriceSqrt(BigNumber.from(targetPrice));
+    const targetPriceX96 = encodePriceSqrt(targetPrice);
     if (collateral) {
       return this.mintWithERC20(ethAmount, targetPriceX96, signer, collateral);
     }
@@ -119,7 +119,7 @@ export class UXDController {
     collateral?: string;
   }): Promise<ContractTransaction> {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
-    const targetPriceX96 = encodePriceSqrt(BigNumber.from(targetPrice));
+    const targetPriceX96 = encodePriceSqrt(targetPrice);
     if (collateral) {
       return this.redeemERC20(uxdAmount, targetPriceX96, signer, collateral);
     }
