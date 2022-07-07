@@ -11,7 +11,9 @@
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
-    "target": "es2019"
+    "target": "es2019",
+    // remove "skipLibCheck": true once issues w/ @perp/sdk-curie are resolved.
+    "skipLibCheck": true
   },
   "include": ["src"]
 }

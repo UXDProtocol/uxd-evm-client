@@ -6,6 +6,7 @@ import {
   providers,
   Signer,
 } from "ethers";
+import { Subject } from "rxjs";
 import {
   MintedEventObject,
   RedeemedEventObject,
@@ -16,8 +17,8 @@ import {
   ApprovalEventObject,
   TransferEventObject,
 } from "../artifacts/types/ERC20";
-import { Subject } from "rxjs";
 import { ERC20__factory, UXDController__factory } from "../artifacts/types";
+import { encodePriceSqrt } from "./priceEncoder";
 
 export interface CollateralInfo {
   symbol?: string;
@@ -68,82 +69,82 @@ export class UXDController {
 
   public mint({
     amount,
-    slippage,
+    targetPrice,
     signer,
     collateral,
   }: {
     amount: number;
-    slippage: number;
+    targetPrice: number;
     signer: Signer;
     collateral?: string;
   }): Promise<ContractTransaction> {
     const ethAmount = ethers.utils.parseEther(amount.toString());
-    const ethSlippage = ethers.utils.parseEther(slippage.toString());
+    const targetPriceX96 = encodePriceSqrt(targetPrice);
     if (collateral) {
-      return this.mintWithERC20(ethAmount, ethSlippage, signer, collateral);
+      return this.mintWithERC20(ethAmount, targetPriceX96, signer, collateral);
     }
-    return this.mintWithETH(ethAmount, ethSlippage, signer);
+    return this.mintWithETH(ethAmount, targetPriceX96, signer);
   }
 
   private mintWithERC20(
     ethAmount: BigNumber,
-    ethSlippage: BigNumber,
+    targetPriceX96: BigNumber,
     signer: Signer,
     collateral: string
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .mint(this.market, collateral, ethAmount, ethSlippage);
+      .mint(this.market, collateral, ethAmount, targetPriceX96);
   }
 
   private mintWithETH(
     ethAmount: BigNumber,
-    ethSlippage: BigNumber,
+    targetPriceX96: BigNumber,
     signer: Signer
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .mintWithEth(this.market, ethSlippage, { value: ethAmount });
+      .mintWithEth(this.market, targetPriceX96, { value: ethAmount });
   }
 
   public redeem({
     amount,
-    slippage,
+    targetPrice,
     signer,
     collateral,
   }: {
     amount: number;
-    slippage: number;
+    targetPrice: number;
     signer: Signer;
     collateral?: string;
   }): Promise<ContractTransaction> {
     const uxdAmount = ethers.utils.parseEther(amount.toString());
-    const slippageAmount = ethers.utils.parseEther(slippage.toString());
+    const targetPriceX96 = encodePriceSqrt(targetPrice);
     if (collateral) {
-      return this.redeemERC20(uxdAmount, slippageAmount, signer, collateral);
+      return this.redeemERC20(uxdAmount, targetPriceX96, signer, collateral);
     }
-    return this.redeemEth(uxdAmount, slippageAmount, signer);
+    return this.redeemEth(uxdAmount, targetPriceX96, signer);
   }
 
   private redeemERC20(
     uxdAmount: BigNumber,
-    slippageAmount: BigNumber,
+    targetPriceX96: BigNumber,
     signer: Signer,
     collateral: string
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .redeem(this.market, collateral, uxdAmount, slippageAmount);
+      .redeem(this.market, collateral, uxdAmount, targetPriceX96);
   }
 
   private redeemEth(
     uxdAmount: BigNumber,
-    slippageAmount: BigNumber,
+    targetPriceX96: BigNumber,
     signer: Signer
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .redeemEth(this.market, uxdAmount, slippageAmount);
+      .redeemEth(this.market, uxdAmount, targetPriceX96);
   }
 
   public approveUXD({
