@@ -99,12 +99,12 @@ export class UXDController {
 
   private mintWithETH(
     ethAmount: BigNumber,
-    ethSlippage: BigNumber,
+    targetPriceX96: BigNumber,
     signer: Signer
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .mintWithEth(this.market, ethSlippage, { value: ethAmount });
+      .mintWithEth(this.market, targetPriceX96, { value: ethAmount });
   }
 
   public redeem({
