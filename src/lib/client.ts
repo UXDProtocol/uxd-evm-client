@@ -23,6 +23,10 @@ export class UXDClient {
     });
   }
 
+  public static calculateTargetPrice(price: number, slippage: number): number {
+    return (price * (1000 - slippage * 10)) / 1000;
+  }
+
   // TODO: more
   public getController(): UXDController {
     return this.controller;
