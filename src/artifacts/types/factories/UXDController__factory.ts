@@ -4,10 +4,7 @@
 import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
 import type { PromiseOrValue } from "../common";
-import type {
-  UXDControllerContract,
-  UXDControllerInterface,
-} from "../UXDController";
+import type { UXDControllerContract, UXDControllerInterface } from "../UXDController";
 
 const _abi = [
   {
@@ -321,7 +318,7 @@ const _abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct UXDControllerContract.CollateralInfo[]",
+        internalType: "struct UXDController.CollateralInfo[]",
         name: "info",
         type: "tuple[]",
       },
@@ -765,10 +762,6 @@ export class UXDController__factory extends ContractFactory {
     address: string,
     signerOrProvider: Signer | Provider
   ): UXDControllerContract {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as UXDControllerContract;
+    return new Contract(address, _abi, signerOrProvider) as UXDControllerContract;
   }
 }

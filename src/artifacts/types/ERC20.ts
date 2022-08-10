@@ -154,7 +154,7 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export interface ERC20 extends BaseContract {
+export interface ERC20Contract extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;

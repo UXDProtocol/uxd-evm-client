@@ -13,7 +13,7 @@ import {
   UXDControllerContract,
 } from "../artifacts/types/UXDController";
 import {
-  ERC20 as ERC20Contract,
+  ERC20Contract,
   ApprovalEventObject,
   TransferEventObject,
 } from "../artifacts/types/ERC20";
@@ -237,10 +237,10 @@ export class UXDController {
   // Utility function that converts an event object received from the contract to a subject
   protected registerEventListener<
     T =
-      | MintedEventObject
-      | RedeemedEventObject
-      | ApprovalEventObject
-      | TransferEventObject
+    | MintedEventObject
+    | RedeemedEventObject
+    | ApprovalEventObject
+    | TransferEventObject
   >(
     contract: Contract,
     eventName: string,

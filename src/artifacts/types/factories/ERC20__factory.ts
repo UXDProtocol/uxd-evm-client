@@ -4,7 +4,7 @@
 import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
 import type { PromiseOrValue } from "../common";
-import type { ERC20, ERC20Interface } from "../ERC20";
+import type { ERC20Contract, ERC20Interface } from "../ERC20";
 
 const _abi = [
   {
@@ -319,8 +319,8 @@ export class ERC20__factory extends ContractFactory {
     name_: PromiseOrValue<string>,
     symbol_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ERC20> {
-    return super.deploy(name_, symbol_, overrides || {}) as Promise<ERC20>;
+  ): Promise<ERC20Contract> {
+    return super.deploy(name_, symbol_, overrides || {}) as Promise<ERC20Contract>;
   }
   override getDeployTransaction(
     name_: PromiseOrValue<string>,
@@ -329,8 +329,8 @@ export class ERC20__factory extends ContractFactory {
   ): TransactionRequest {
     return super.getDeployTransaction(name_, symbol_, overrides || {});
   }
-  override attach(address: string): ERC20 {
-    return super.attach(address) as ERC20;
+  override attach(address: string): ERC20Contract {
+    return super.attach(address) as ERC20Contract;
   }
   override connect(signer: Signer): ERC20__factory {
     return super.connect(signer) as ERC20__factory;
@@ -341,7 +341,7 @@ export class ERC20__factory extends ContractFactory {
   static createInterface(): ERC20Interface {
     return new utils.Interface(_abi) as ERC20Interface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): ERC20 {
-    return new Contract(address, _abi, signerOrProvider) as ERC20;
+  static connect(address: string, signerOrProvider: Signer | Provider): ERC20Contract {
+    return new Contract(address, _abi, signerOrProvider) as ERC20Contract;
   }
 }

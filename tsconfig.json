@@ -7,7 +7,7 @@
     "paths": {
       "*": ["./typings/*"]
     },
-    "types": ["jest", "node"],
+    "types": ["node"],
     "resolveJsonModule": true,
     "strict": true,
     "sourceMap": true,
