@@ -320,7 +320,11 @@ export class ERC20__factory extends ContractFactory {
     symbol_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ERC20Contract> {
-    return super.deploy(name_, symbol_, overrides || {}) as Promise<ERC20Contract>;
+    return super.deploy(
+      name_,
+      symbol_,
+      overrides || {}
+    ) as Promise<ERC20Contract>;
   }
   override getDeployTransaction(
     name_: PromiseOrValue<string>,
@@ -341,7 +345,10 @@ export class ERC20__factory extends ContractFactory {
   static createInterface(): ERC20Interface {
     return new utils.Interface(_abi) as ERC20Interface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): ERC20Contract {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): ERC20Contract {
     return new Contract(address, _abi, signerOrProvider) as ERC20Contract;
   }
 }

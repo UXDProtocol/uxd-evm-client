@@ -837,6 +837,10 @@ export class PerpDepository__factory extends ContractFactory {
     address: string,
     signerOrProvider: Signer | Provider
   ): PerpDepositoryContract {
-    return new Contract(address, _abi, signerOrProvider) as PerpDepositoryContract;
+    return new Contract(
+      address,
+      _abi,
+      signerOrProvider
+    ) as PerpDepositoryContract;
   }
 }

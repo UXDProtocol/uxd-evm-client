@@ -237,10 +237,10 @@ export class UXDController {
   // Utility function that converts an event object received from the contract to a subject
   protected registerEventListener<
     T =
-    | MintedEventObject
-    | RedeemedEventObject
-    | ApprovalEventObject
-    | TransferEventObject
+      | MintedEventObject
+      | RedeemedEventObject
+      | ApprovalEventObject
+      | TransferEventObject
   >(
     contract: Contract,
     eventName: string,

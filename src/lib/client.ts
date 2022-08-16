@@ -1,6 +1,14 @@
 import { providers } from "ethers";
-import { ERC20Contract, PerpDepositoryContract, UXDControllerContract } from "..//artifacts/types";
-import { ERC20__factory, PerpDepository__factory, UXDController__factory } from "..//artifacts/types/factories";
+import {
+  ERC20Contract,
+  PerpDepositoryContract,
+  UXDControllerContract,
+} from "..//artifacts/types";
+import {
+  ERC20__factory,
+  PerpDepository__factory,
+  UXDController__factory,
+} from "..//artifacts/types/factories";
 import { UXDController } from "./UXDController";
 
 export class UXDClient {
@@ -51,7 +59,10 @@ export class UXDClient {
   }
 
   public getUXDControllerContract(): UXDControllerContract {
-    return UXDController__factory.connect(this.controllerAddress, this.provider);
+    return UXDController__factory.connect(
+      this.controllerAddress,
+      this.provider
+    );
   }
 
   public getPerpDepositoryContract(): PerpDepositoryContract {
