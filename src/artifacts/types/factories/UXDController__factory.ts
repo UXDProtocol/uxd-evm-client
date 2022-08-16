@@ -4,10 +4,7 @@
 import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
 import type { PromiseOrValue } from "../common";
-import type {
-  UXDControllerContract,
-  UXDControllerInterface,
-} from "../UXDController";
+import type { UXDController, UXDControllerInterface } from "../UXDController";
 
 const _abi = [
   {
@@ -321,7 +318,7 @@ const _abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct UXDControllerContract.CollateralInfo[]",
+        internalType: "struct UXDController.CollateralInfo[]",
         name: "info",
         type: "tuple[]",
       },
@@ -735,12 +732,12 @@ export class UXDController__factory extends ContractFactory {
     registryAddress: PromiseOrValue<string>,
     _weth: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<UXDControllerContract> {
+  ): Promise<UXDController> {
     return super.deploy(
       registryAddress,
       _weth,
       overrides || {}
-    ) as Promise<UXDControllerContract>;
+    ) as Promise<UXDController>;
   }
   override getDeployTransaction(
     registryAddress: PromiseOrValue<string>,
@@ -749,8 +746,8 @@ export class UXDController__factory extends ContractFactory {
   ): TransactionRequest {
     return super.getDeployTransaction(registryAddress, _weth, overrides || {});
   }
-  override attach(address: string): UXDControllerContract {
-    return super.attach(address) as UXDControllerContract;
+  override attach(address: string): UXDController {
+    return super.attach(address) as UXDController;
   }
   override connect(signer: Signer): UXDController__factory {
     return super.connect(signer) as UXDController__factory;
@@ -764,11 +761,7 @@ export class UXDController__factory extends ContractFactory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): UXDControllerContract {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as UXDControllerContract;
+  ): UXDController {
+    return new Contract(address, _abi, signerOrProvider) as UXDController;
   }
 }

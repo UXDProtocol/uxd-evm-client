@@ -10,10 +10,10 @@ import { Subject } from "rxjs";
 import {
   MintedEventObject,
   RedeemedEventObject,
-  UXDControllerContract,
+  UXDController as UXDControllerContract,
 } from "../artifacts/types/UXDController";
 import {
-  ERC20 as ERC20Contract,
+  ERC20,
   ApprovalEventObject,
   TransferEventObject,
 } from "../artifacts/types/ERC20";
@@ -32,7 +32,7 @@ export class UXDController {
 
   // internal contracts
   protected controllerContract: UXDControllerContract;
-  protected uxdContract: ERC20Contract;
+  protected uxdContract: ERC20;
 
   // market to mint in
   private market: string;
@@ -237,10 +237,10 @@ export class UXDController {
   // Utility function that converts an event object received from the contract to a subject
   protected registerEventListener<
     T =
-      | MintedEventObject
-      | RedeemedEventObject
-      | ApprovalEventObject
-      | TransferEventObject
+    | MintedEventObject
+    | RedeemedEventObject
+    | ApprovalEventObject
+    | TransferEventObject
   >(
     contract: Contract,
     eventName: string,

@@ -10,4 +10,6 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
+      - run: sh ./scripts/generate-types.sh
+      - run: npm run format
       - run: npm run validate

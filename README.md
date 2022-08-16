@@ -14,33 +14,19 @@ npm i "uxd-evm-client@0.0.1-beta.3"
 
 https://github.com/dethcrypto/TypeChain
 
-1/ Run the following command that will generate typing for contracts:
+Run the following command that will generate typing for contracts:
 
 ```
-./node_modules/typechain/dist/cli/cli.js --target=ethers-v5 ./src/artifacts/*
+ ./scripts/generate-types.sh
 ```
-
-1/ Edit the UXDController.ts file to rename:
-
-```
- export interface UXDController extends BaseContract {
-```
-
-into
-
-```
-export interface UXDControllerContract extends BaseContract {
-```
-
-to avoid conflict with the namespace
 
 ### Import library code
 
 You need to import the UXDController from the library as well as the ethers library
 
 ```typescript
-import { ethers } from 'ethers';
-import { UXDController } from 'uxd-evm-client';
+import { ethers } from "ethers";
+import { UXDController } from "uxd-evm-client";
 ```
 
 ### Initialize the controller
@@ -54,17 +40,11 @@ The controller must be initialized with following parameters:
 The provider can be injected when using Metamask or other browser wallet
 
 ```typescript
-const controllerAddress = '';
-const uxdTokenAddress = '0x23901A57A4fE127ee5FfF31DdAB8FBAf83d0539C';
+const controllerAddress = "";
+const uxdTokenAddress = "0x23901A57A4fE127ee5FfF31DdAB8FBAf83d0539C";
 
-const provider = new ethers.providers.JsonRpcProvider(
-  'https://kovan.optimism.io'
-);
-const controller = new UXDController(
-  provider,
-  controllerAddress,
-  uxdTokenAddress
-);
+const provider = new ethers.providers.JsonRpcProvider("https://kovan.optimism.io");
+const controller = new UXDController(provider, controllerAddress, uxdTokenAddress);
 ```
 
 ### Interact with controller contract
@@ -75,7 +55,7 @@ You can then start calling functions on the controller
 
 ```typescript
 const totalSupply = await controller.uxdTotalSupply();
-console.log('totalsupply = ', totalSupply);
+console.log("totalsupply = ", totalSupply);
 ```
 
 #### Mint UXD with WETH

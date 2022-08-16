@@ -351,7 +351,7 @@ export type WhitelistUpdatedEvent = TypedEvent<
 export type WhitelistUpdatedEventFilter =
   TypedEventFilter<WhitelistUpdatedEvent>;
 
-export interface UXDControllerContract extends BaseContract {
+export interface UXDController extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -400,7 +400,9 @@ export interface UXDControllerContract extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getCollateralInfo(overrides?: CallOverrides): Promise<
+    getCollateralInfo(
+      overrides?: CallOverrides
+    ): Promise<
       [UXDController.CollateralInfoStructOutput[]] & {
         info: UXDController.CollateralInfoStructOutput[];
       }
