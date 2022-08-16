@@ -1,14 +1,14 @@
 import { providers } from "ethers";
 import {
-  ERC20Contract,
-  PerpDepositoryContract,
-  UXDControllerContract,
-} from "..//artifacts/types";
+  ERC20,
+  PerpDepository,
+  UXDController as UXDControllerContract,
+} from "../artifacts/types";
 import {
   ERC20__factory,
   PerpDepository__factory,
   UXDController__factory,
-} from "..//artifacts/types/factories";
+} from "../artifacts/types/factories";
 import { UXDController } from "./UXDController";
 
 export class UXDClient {
@@ -54,7 +54,7 @@ export class UXDClient {
   }
 
   // -- TEMPORARY --
-  public getERC20Contract(): ERC20Contract {
+  public getERC20Contract(): ERC20 {
     return ERC20__factory.connect(this.redeemable, this.provider);
   }
 
@@ -65,7 +65,7 @@ export class UXDClient {
     );
   }
 
-  public getPerpDepositoryContract(): PerpDepositoryContract {
+  public getPerpDepositoryContract(): PerpDepository {
     return PerpDepository__factory.connect(this.perpDepository, this.provider);
   }
   // ----------------

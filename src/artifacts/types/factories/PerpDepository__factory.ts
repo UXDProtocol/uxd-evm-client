@@ -5,7 +5,7 @@ import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
 import type { PromiseOrValue } from "../common";
 import type {
-  PerpDepositoryContract,
+  PerpDepository,
   PerpDepositoryInterface,
 } from "../PerpDepository";
 
@@ -813,16 +813,16 @@ export class PerpDepository__factory extends ContractFactory {
 
   override deploy(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<PerpDepositoryContract> {
-    return super.deploy(overrides || {}) as Promise<PerpDepositoryContract>;
+  ): Promise<PerpDepository> {
+    return super.deploy(overrides || {}) as Promise<PerpDepository>;
   }
   override getDeployTransaction(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
-  override attach(address: string): PerpDepositoryContract {
-    return super.attach(address) as PerpDepositoryContract;
+  override attach(address: string): PerpDepository {
+    return super.attach(address) as PerpDepository;
   }
   override connect(signer: Signer): PerpDepository__factory {
     return super.connect(signer) as PerpDepository__factory;
@@ -836,11 +836,7 @@ export class PerpDepository__factory extends ContractFactory {
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): PerpDepositoryContract {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as PerpDepositoryContract;
+  ): PerpDepository {
+    return new Contract(address, _abi, signerOrProvider) as PerpDepository;
   }
 }

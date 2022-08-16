@@ -14,46 +14,10 @@ npm i "uxd-evm-client@0.0.1-beta.3"
 
 https://github.com/dethcrypto/TypeChain
 
-1/ Run the following command that will generate typing for contracts:
+Run the following command that will generate typing for contracts:
 
 ```
-npx typechain --target=ethers-v5 ./src/artifacts/*
-```
-
-or
-
-```
-./node_modules/typechain/dist/cli/cli.js --target=ethers-v5 ./src/artifacts/*
-```
-
-_the folder ./src/artifacts/ must contains only the json artifacts_
-
-2/ Copy the /types/ethers-contracts/ content into src/artifacts/types/ directory. And delete the /types folder.
-
-3/ Edit the `UXDController.ts` file to rename:
-
-```
- export interface UXDController extends BaseContract {
-```
-
-into
-
-```
-export interface UXDControllerContract extends BaseContract {
-```
-
-to avoid conflict with the namespace
-
-do the same for `PerpDepository.ts` and `ERC20.ts`, search for `extends BaseContract`
-
-4/ Edit the factories/\* files. Change ERC20 type by ERC20Contract etc. in the import. Replace where it's needed (red in your visual studio at the bottom of the files).
-
-5/ In src/artifacts/types/index.ts change the names to
-
-```
-export type { ERC20Contract } from "./ERC20";
-export type { PerpDepositoryContract } from "./PerpDepository";
-export type { UXDControllerContract } from "./UXDController";
+ ./scripts/generate-types.sh
 ```
 
 ### Import library code
