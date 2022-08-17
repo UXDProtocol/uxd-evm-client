@@ -34,9 +34,6 @@ export class UXDController {
   protected controllerContract: UXDControllerContract;
   protected uxdContract: ERC20;
 
-  // market to mint in
-  private market: string;
-
   // clients can listen to events on these subjects
   public readonly mintSubject: Subject<MintedEventObject> =
     new Subject<MintedEventObject>();
@@ -51,15 +48,12 @@ export class UXDController {
     provider,
     controller,
     redeemable,
-    market,
   }: {
     provider: providers.Provider;
     controller: string;
     redeemable: string;
-    market: string;
   }) {
     this.provider = provider;
-    this.market = market;
     this.controllerContract = UXDController__factory.connect(
       controller,
       this.provider
@@ -94,7 +88,7 @@ export class UXDController {
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .mint(this.market, collateral, ethAmount, targetPriceX96);
+      .mint(collateral, ethAmount, targetPriceX96);
   }
 
   private mintWithETH(
@@ -104,7 +98,7 @@ export class UXDController {
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .mintWithEth(this.market, targetPriceX96, { value: ethAmount });
+      .mintWithEth(targetPriceX96, { value: ethAmount });
   }
 
   public redeem({
@@ -134,7 +128,7 @@ export class UXDController {
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .redeem(this.market, collateral, uxdAmount, targetPriceX96);
+      .redeem(collateral, uxdAmount, targetPriceX96);
   }
 
   private redeemEth(
@@ -144,7 +138,7 @@ export class UXDController {
   ): Promise<ContractTransaction> {
     return this.controllerContract
       .connect(signer)
-      .redeemEth(this.market, uxdAmount, targetPriceX96);
+      .redeemForEth(uxdAmount, targetPriceX96);
   }
 
   public approveUXD({
@@ -212,16 +206,6 @@ export class UXDController {
     return Number(ethers.utils.formatEther(totalSupply));
   }
 
-  public async mintedPerCollateral(token: string): Promise<number> {
-    const minted = await this.controllerContract.mintedPerCollateral(token);
-    return Number(ethers.utils.formatEther(minted));
-  }
-
-  public async getDepositedCollateralAmount(token: string): Promise<number> {
-    const redeemable = await this.controllerContract.redeemable(token);
-    return Number(ethers.utils.formatEther(redeemable));
-  }
-
   // ===== utils
 
   // Transform values in an array into an object with named attributes
@@ -237,10 +221,10 @@ export class UXDController {
   // Utility function that converts an event object received from the contract to a subject
   protected registerEventListener<
     T =
-    | MintedEventObject
-    | RedeemedEventObject
-    | ApprovalEventObject
-    | TransferEventObject
+      | MintedEventObject
+      | RedeemedEventObject
+      | ApprovalEventObject
+      | TransferEventObject
   >(
     contract: Contract,
     eventName: string,
