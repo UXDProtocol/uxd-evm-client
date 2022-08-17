@@ -28,82 +28,55 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export declare namespace UXDController {
-  export type CollateralInfoStruct = {
-    token: PromiseOrValue<string>;
-    redeemable: PromiseOrValue<BigNumberish>;
-    minted: PromiseOrValue<BigNumberish>;
-  };
-
-  export type CollateralInfoStructOutput = [string, BigNumber, BigNumber] & {
-    token: string;
-    redeemable: BigNumber;
-    minted: BigNumber;
-  };
-}
-
 export interface UXDControllerInterface extends utils.Interface {
   functions: {
-    "collateralDeposited(address)": FunctionFragment;
+    "VERSION()": FunctionFragment;
     "collateralList(uint256)": FunctionFragment;
     "collateralTokens(address)": FunctionFragment;
-    "depositInsurance(address,address,uint256)": FunctionFragment;
-    "getCollateralInfo()": FunctionFragment;
-    "governor()": FunctionFragment;
-    "insuranceToken()": FunctionFragment;
-    "mint(address,address,uint256,uint160)": FunctionFragment;
-    "mintWithEth(address,uint160)": FunctionFragment;
-    "mintedPerCollateral(address)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
+    "mint(address,uint256,uint160)": FunctionFragment;
+    "mintWithEth(uint160)": FunctionFragment;
     "owner()": FunctionFragment;
-    "redeem(address,address,uint256,uint160)": FunctionFragment;
-    "redeemEth(address,uint256,uint160)": FunctionFragment;
-    "redeemable(address)": FunctionFragment;
-    "registry()": FunctionFragment;
+    "proxiableUUID()": FunctionFragment;
+    "redeem(address,uint256,uint160)": FunctionFragment;
+    "redeemForEth(uint256,uint160)": FunctionFragment;
+    "redeemable()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "router()": FunctionFragment;
-    "setInsuranceToken(address)": FunctionFragment;
+    "setRedeemable(address)": FunctionFragment;
     "setRouter(address)": FunctionFragment;
-    "setToken(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "uxdToken()": FunctionFragment;
-    "weth9()": FunctionFragment;
+    "upgradeTo(address)": FunctionFragment;
+    "upgradeToAndCall(address,bytes)": FunctionFragment;
+    "weth()": FunctionFragment;
     "whitelistCollateral(address,bool,bool)": FunctionFragment;
-    "withdrawInsuranceTo(address,address,uint256,address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "collateralDeposited"
+      | "VERSION"
       | "collateralList"
       | "collateralTokens"
-      | "depositInsurance"
-      | "getCollateralInfo"
-      | "governor"
-      | "insuranceToken"
+      | "initialize"
       | "mint"
       | "mintWithEth"
-      | "mintedPerCollateral"
       | "owner"
+      | "proxiableUUID"
       | "redeem"
-      | "redeemEth"
+      | "redeemForEth"
       | "redeemable"
-      | "registry"
       | "renounceOwnership"
       | "router"
-      | "setInsuranceToken"
+      | "setRedeemable"
       | "setRouter"
-      | "setToken"
       | "transferOwnership"
-      | "uxdToken"
-      | "weth9"
+      | "upgradeTo"
+      | "upgradeToAndCall"
+      | "weth"
       | "whitelistCollateral"
-      | "withdrawInsuranceTo"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "collateralDeposited",
-    values: [PromiseOrValue<string>]
-  ): string;
+  encodeFunctionData(functionFragment: "VERSION", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "collateralList",
     values: [PromiseOrValue<BigNumberish>]
@@ -113,26 +86,12 @@ export interface UXDControllerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositInsurance",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCollateralInfo",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "governor", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "insuranceToken",
-    values?: undefined
+    functionFragment: "initialize",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "mint",
     values: [
-      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
@@ -140,42 +99,36 @@ export interface UXDControllerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mintWithEth",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintedPerCollateral",
-    values: [PromiseOrValue<string>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "proxiableUUID",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "redeem",
     values: [
       PromiseOrValue<string>,
-      PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "redeemEth",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    functionFragment: "redeemForEth",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "redeemable",
-    values: [PromiseOrValue<string>]
+    values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "setInsuranceToken",
+    functionFragment: "setRedeemable",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -183,15 +136,18 @@ export interface UXDControllerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setToken",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "uxdToken", values?: undefined): string;
-  encodeFunctionData(functionFragment: "weth9", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "upgradeTo",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeToAndCall",
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(functionFragment: "weth", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "whitelistCollateral",
     values: [
@@ -200,20 +156,8 @@ export interface UXDControllerInterface extends utils.Interface {
       PromiseOrValue<boolean>
     ]
   ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawInsuranceTo",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
-  ): string;
 
-  decodeFunctionResult(
-    functionFragment: "collateralDeposited",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "VERSION", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "collateralList",
     data: BytesLike
@@ -222,73 +166,98 @@ export interface UXDControllerInterface extends utils.Interface {
     functionFragment: "collateralTokens",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "depositInsurance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCollateralInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "governor", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "insuranceToken",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mintWithEth",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "mintedPerCollateral",
+    functionFragment: "proxiableUUID",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "redeemEth", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemForEth",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "redeemable", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setInsuranceToken",
+    functionFragment: "setRedeemable",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setRouter", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "uxdToken", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "weth9", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeToAndCall",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "weth", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "whitelistCollateral",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawInsuranceTo",
-    data: BytesLike
-  ): Result;
 
   events: {
+    "AdminChanged(address,address)": EventFragment;
+    "BeaconUpgraded(address)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "Minted(address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Redeemed(address,uint256,uint256)": EventFragment;
     "RouterUpdated(address,address)": EventFragment;
-    "WhitelistUpdated(address,address,bool,bool)": EventFragment;
+    "Upgraded(address)": EventFragment;
+    "WhitelistUpdated(address,address,bool)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Minted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Redeemed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RouterUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "WhitelistUpdated"): EventFragment;
 }
+
+export interface AdminChangedEventObject {
+  previousAdmin: string;
+  newAdmin: string;
+}
+export type AdminChangedEvent = TypedEvent<
+  [string, string],
+  AdminChangedEventObject
+>;
+
+export type AdminChangedEventFilter = TypedEventFilter<AdminChangedEvent>;
+
+export interface BeaconUpgradedEventObject {
+  beacon: string;
+}
+export type BeaconUpgradedEvent = TypedEvent<
+  [string],
+  BeaconUpgradedEventObject
+>;
+
+export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface MintedEventObject {
   account: string;
@@ -337,14 +306,20 @@ export type RouterUpdatedEvent = TypedEvent<
 
 export type RouterUpdatedEventFilter = TypedEventFilter<RouterUpdatedEvent>;
 
+export interface UpgradedEventObject {
+  implementation: string;
+}
+export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>;
+
+export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>;
+
 export interface WhitelistUpdatedEventObject {
   by: string;
   token: string;
   isWhitelisted: boolean;
-  isBaseToken: boolean;
 }
 export type WhitelistUpdatedEvent = TypedEvent<
-  [string, string, boolean, boolean],
+  [string, string, boolean],
   WhitelistUpdatedEventObject
 >;
 
@@ -378,10 +353,7 @@ export interface UXDController extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    collateralDeposited(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    VERSION(overrides?: CallOverrides): Promise<[string]>;
 
     collateralList(
       arg0: PromiseOrValue<BigNumberish>,
@@ -393,27 +365,12 @@ export interface UXDController extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    depositInsurance(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+    initialize(
+      _weth: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getCollateralInfo(
-      overrides?: CallOverrides
-    ): Promise<
-      [UXDController.CollateralInfoStructOutput[]] & {
-        info: UXDController.CollateralInfoStructOutput[];
-      }
-    >;
-
-    governor(overrides?: CallOverrides): Promise<[string]>;
-
-    insuranceToken(overrides?: CallOverrides): Promise<[string]>;
-
     mint(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
@@ -421,39 +378,28 @@ export interface UXDController extends BaseContract {
     ): Promise<ContractTransaction>;
 
     mintWithEth(
-      market: PromiseOrValue<string>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    mintedPerCollateral(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     owner(overrides?: CallOverrides): Promise<[string]>;
 
+    proxiableUUID(overrides?: CallOverrides): Promise<[string]>;
+
     redeem(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    redeemEth(
-      market: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+    redeemForEth(
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    redeemable(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    registry(overrides?: CallOverrides): Promise<[string]>;
+    redeemable(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -461,8 +407,8 @@ export interface UXDController extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<[string]>;
 
-    setInsuranceToken(
-      _token: PromiseOrValue<string>,
+    setRedeemable(
+      _redeemable: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -471,19 +417,23 @@ export interface UXDController extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    uxdToken(overrides?: CallOverrides): Promise<[string]>;
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    weth9(overrides?: CallOverrides): Promise<[string]>;
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    weth(overrides?: CallOverrides): Promise<[string]>;
 
     whitelistCollateral(
       tokenAddress: PromiseOrValue<string>,
@@ -491,20 +441,9 @@ export interface UXDController extends BaseContract {
       isBaseToken: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    withdrawInsuranceTo(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
   };
 
-  collateralDeposited(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  VERSION(overrides?: CallOverrides): Promise<string>;
 
   collateralList(
     arg0: PromiseOrValue<BigNumberish>,
@@ -516,23 +455,12 @@ export interface UXDController extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  depositInsurance(
-    market: PromiseOrValue<string>,
-    collateralToken: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
+  initialize(
+    _weth: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getCollateralInfo(
-    overrides?: CallOverrides
-  ): Promise<UXDController.CollateralInfoStructOutput[]>;
-
-  governor(overrides?: CallOverrides): Promise<string>;
-
-  insuranceToken(overrides?: CallOverrides): Promise<string>;
-
   mint(
-    market: PromiseOrValue<string>,
     collateralToken: PromiseOrValue<string>,
     collateralAmount: PromiseOrValue<BigNumberish>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
@@ -540,39 +468,28 @@ export interface UXDController extends BaseContract {
   ): Promise<ContractTransaction>;
 
   mintWithEth(
-    market: PromiseOrValue<string>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  mintedPerCollateral(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   owner(overrides?: CallOverrides): Promise<string>;
 
+  proxiableUUID(overrides?: CallOverrides): Promise<string>;
+
   redeem(
-    market: PromiseOrValue<string>,
     collateralToken: PromiseOrValue<string>,
-    redemptionAmount: PromiseOrValue<BigNumberish>,
+    redeemAmount: PromiseOrValue<BigNumberish>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  redeemEth(
-    market: PromiseOrValue<string>,
-    redemptionAmount: PromiseOrValue<BigNumberish>,
+  redeemForEth(
+    redeemAmount: PromiseOrValue<BigNumberish>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  redeemable(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  registry(overrides?: CallOverrides): Promise<string>;
+  redeemable(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -580,8 +497,8 @@ export interface UXDController extends BaseContract {
 
   router(overrides?: CallOverrides): Promise<string>;
 
-  setInsuranceToken(
-    _token: PromiseOrValue<string>,
+  setRedeemable(
+    _redeemable: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -590,19 +507,23 @@ export interface UXDController extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setToken(
-    _token: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   transferOwnership(
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  uxdToken(overrides?: CallOverrides): Promise<string>;
+  upgradeTo(
+    newImplementation: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  weth9(overrides?: CallOverrides): Promise<string>;
+  upgradeToAndCall(
+    newImplementation: PromiseOrValue<string>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  weth(overrides?: CallOverrides): Promise<string>;
 
   whitelistCollateral(
     tokenAddress: PromiseOrValue<string>,
@@ -611,19 +532,8 @@ export interface UXDController extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  withdrawInsuranceTo(
-    market: PromiseOrValue<string>,
-    collateralToken: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    to: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   callStatic: {
-    collateralDeposited(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    VERSION(overrides?: CallOverrides): Promise<string>;
 
     collateralList(
       arg0: PromiseOrValue<BigNumberish>,
@@ -635,23 +545,12 @@ export interface UXDController extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    depositInsurance(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+    initialize(
+      _weth: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getCollateralInfo(
-      overrides?: CallOverrides
-    ): Promise<UXDController.CollateralInfoStructOutput[]>;
-
-    governor(overrides?: CallOverrides): Promise<string>;
-
-    insuranceToken(overrides?: CallOverrides): Promise<string>;
-
     mint(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
@@ -659,46 +558,35 @@ export interface UXDController extends BaseContract {
     ): Promise<[BigNumber, BigNumber]>;
 
     mintWithEth(
-      market: PromiseOrValue<string>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
-
-    mintedPerCollateral(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
+    proxiableUUID(overrides?: CallOverrides): Promise<string>;
+
     redeem(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
-    redeemEth(
-      market: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+    redeemForEth(
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
-    redeemable(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    registry(overrides?: CallOverrides): Promise<string>;
+    redeemable(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     router(overrides?: CallOverrides): Promise<string>;
 
-    setInsuranceToken(
-      _token: PromiseOrValue<string>,
+    setRedeemable(
+      _redeemable: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -707,19 +595,23 @@ export interface UXDController extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setToken(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    uxdToken(overrides?: CallOverrides): Promise<string>;
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
-    weth9(overrides?: CallOverrides): Promise<string>;
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    weth(overrides?: CallOverrides): Promise<string>;
 
     whitelistCollateral(
       tokenAddress: PromiseOrValue<string>,
@@ -727,17 +619,28 @@ export interface UXDController extends BaseContract {
       isBaseToken: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    withdrawInsuranceTo(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
   };
 
   filters: {
+    "AdminChanged(address,address)"(
+      previousAdmin?: null,
+      newAdmin?: null
+    ): AdminChangedEventFilter;
+    AdminChanged(
+      previousAdmin?: null,
+      newAdmin?: null
+    ): AdminChangedEventFilter;
+
+    "BeaconUpgraded(address)"(
+      beacon?: PromiseOrValue<string> | null
+    ): BeaconUpgradedEventFilter;
+    BeaconUpgraded(
+      beacon?: PromiseOrValue<string> | null
+    ): BeaconUpgradedEventFilter;
+
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "Minted(address,uint256,uint256)"(
       account?: PromiseOrValue<string> | null,
       base?: null,
@@ -778,25 +681,27 @@ export interface UXDController extends BaseContract {
       newRouter?: PromiseOrValue<string> | null
     ): RouterUpdatedEventFilter;
 
-    "WhitelistUpdated(address,address,bool,bool)"(
+    "Upgraded(address)"(
+      implementation?: PromiseOrValue<string> | null
+    ): UpgradedEventFilter;
+    Upgraded(
+      implementation?: PromiseOrValue<string> | null
+    ): UpgradedEventFilter;
+
+    "WhitelistUpdated(address,address,bool)"(
       by?: PromiseOrValue<string> | null,
       token?: PromiseOrValue<string> | null,
-      isWhitelisted?: null,
-      isBaseToken?: null
+      isWhitelisted?: null
     ): WhitelistUpdatedEventFilter;
     WhitelistUpdated(
       by?: PromiseOrValue<string> | null,
       token?: PromiseOrValue<string> | null,
-      isWhitelisted?: null,
-      isBaseToken?: null
+      isWhitelisted?: null
     ): WhitelistUpdatedEventFilter;
   };
 
   estimateGas: {
-    collateralDeposited(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    VERSION(overrides?: CallOverrides): Promise<BigNumber>;
 
     collateralList(
       arg0: PromiseOrValue<BigNumberish>,
@@ -808,21 +713,12 @@ export interface UXDController extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    depositInsurance(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+    initialize(
+      _weth: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getCollateralInfo(overrides?: CallOverrides): Promise<BigNumber>;
-
-    governor(overrides?: CallOverrides): Promise<BigNumber>;
-
-    insuranceToken(overrides?: CallOverrides): Promise<BigNumber>;
-
     mint(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
@@ -830,39 +726,28 @@ export interface UXDController extends BaseContract {
     ): Promise<BigNumber>;
 
     mintWithEth(
-      market: PromiseOrValue<string>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    mintedPerCollateral(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
+    proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>;
+
     redeem(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    redeemEth(
-      market: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+    redeemForEth(
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    redeemable(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    registry(overrides?: CallOverrides): Promise<BigNumber>;
+    redeemable(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -870,8 +755,8 @@ export interface UXDController extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setInsuranceToken(
-      _token: PromiseOrValue<string>,
+    setRedeemable(
+      _redeemable: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -880,19 +765,23 @@ export interface UXDController extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    uxdToken(overrides?: CallOverrides): Promise<BigNumber>;
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
-    weth9(overrides?: CallOverrides): Promise<BigNumber>;
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    weth(overrides?: CallOverrides): Promise<BigNumber>;
 
     whitelistCollateral(
       tokenAddress: PromiseOrValue<string>,
@@ -900,21 +789,10 @@ export interface UXDController extends BaseContract {
       isBaseToken: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    withdrawInsuranceTo(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    collateralDeposited(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    VERSION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     collateralList(
       arg0: PromiseOrValue<BigNumberish>,
@@ -926,21 +804,12 @@ export interface UXDController extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    depositInsurance(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+    initialize(
+      _weth: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCollateralInfo(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    governor(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    insuranceToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     mint(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
@@ -948,39 +817,28 @@ export interface UXDController extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mintWithEth(
-      market: PromiseOrValue<string>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    mintedPerCollateral(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     redeem(
-      market: PromiseOrValue<string>,
       collateralToken: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    redeemEth(
-      market: PromiseOrValue<string>,
-      redemptionAmount: PromiseOrValue<BigNumberish>,
+    redeemForEth(
+      redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    redeemable(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    redeemable(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -988,8 +846,8 @@ export interface UXDController extends BaseContract {
 
     router(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    setInsuranceToken(
-      _token: PromiseOrValue<string>,
+    setRedeemable(
+      _redeemable: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -998,32 +856,28 @@ export interface UXDController extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    setToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    uxdToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    upgradeTo(
+      newImplementation: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
-    weth9(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    upgradeToAndCall(
+      newImplementation: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    weth(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     whitelistCollateral(
       tokenAddress: PromiseOrValue<string>,
       isWhitelisted: PromiseOrValue<boolean>,
       isBaseToken: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    withdrawInsuranceTo(
-      market: PromiseOrValue<string>,
-      collateralToken: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
