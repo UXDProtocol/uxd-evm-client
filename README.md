@@ -7,7 +7,7 @@ Typescript library for interacting with the UXD contracts on EVM.
 ### Install the library
 
 ```javascript
-npm i "uxd-evm-client@0.0.1-beta.3"
+npm i "uxd-evm-client@0.2.3"
 ```
 
 ### Generation of ethers-contracts types
@@ -26,25 +26,32 @@ You need to import the UXDController from the library as well as the ethers libr
 
 ```typescript
 import { ethers } from "ethers";
-import { UXDController } from "uxd-evm-client";
+import { UXDClient } from "uxd-evm-client";
 ```
 
-### Initialize the controller
+### Initialize the client
 
-The controller must be initialized with following parameters:
+The client must be initialized with following parameters:
 
 1. JSON RPC provider pointing to the kovan optimism RPC endpoint.
 2. UXD Controller contract address on kovan optimism.
-3. UXD token on kovan optimism.
+3. The address of the depository
+4. UXD token on kovan optimism.
 
 The provider can be injected when using Metamask or other browser wallet
 
 ```typescript
-const controllerAddress = "";
-const uxdTokenAddress = "0x23901A57A4fE127ee5FfF31DdAB8FBAf83d0539C";
+const controller = "..."; // controller address
+const depository = "..."; // depository address
+const redeemable = "..."; // redeemable address
 
 const provider = new ethers.providers.JsonRpcProvider("https://kovan.optimism.io");
-const controller = new UXDController(provider, controllerAddress, uxdTokenAddress);
+const client = new UXDClient({
+  provider, 
+  controller, 
+  depository
+  redeemable
+});
 ```
 
 ### Interact with controller contract
@@ -54,7 +61,8 @@ You can then start calling functions on the controller
 #### Get UXD total supply
 
 ```typescript
-const totalSupply = await controller.uxdTotalSupply();
+const controller = client.controller();
+const totalSupply = await controller.getRedeemableMintCirculatingSupply();
 console.log("totalsupply = ", totalSupply);
 ```
 
@@ -64,7 +72,6 @@ To mint with WETH can call the `mint()` function:
 
 ```typescript
 await controller.mint(
-      market
       collateralAddress,
       wethAmount,
       slippageAmount
@@ -83,7 +90,7 @@ await controller.approveToken(contractAddress, spender, amount, signer);
 #### Mint UXD with ETH
 
 ```typescript
-await controller.mintWithEth(market, ethAmount, slippage, signer);
+await controller.mintWithEth(ethAmount, slippage, signer);
 ```
 
 No prior approval is required to mint with native ETH.
@@ -91,13 +98,13 @@ No prior approval is required to mint with native ETH.
 #### Redeem UXD for ETH
 
 ```typescript
-await controller.redeem(market, wethAddress, uxdAmount, slippage, signer);
+await controller.redeem(wethAddress, uxdAmount, slippage, signer);
 ```
 
 #### Redeem UXD for ETH
 
 ```typescript
-await controller.redeemEth(market, uxdAmount, slippage, signer);
+await controller.redeemEth(uxdAmount, slippage, signer);
 ```
 
 Check [here](https://github.com/UXDProtocol/uxd-evm-client/blob/main/src/lib/controller.ts) to see the list of public functions availale on the controller.

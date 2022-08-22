@@ -401,6 +401,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
     "InsuranceDeposited(address,address,uint256)": EventFragment;
     "InsuranceWithdrawn(address,address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "PositionOpened(bool,uint256,bool,uint160)": EventFragment;
     "RedeemableSoftCapUpdated(address,uint256)": EventFragment;
     "Upgraded(address)": EventFragment;
   };
@@ -411,6 +412,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "InsuranceDeposited"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "InsuranceWithdrawn"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PositionOpened"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RedeemableSoftCapUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
 }
@@ -480,6 +482,19 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface PositionOpenedEventObject {
+  isShort: boolean;
+  amount: BigNumber;
+  amountIsInput: boolean;
+  sqrtPriceLimitX96: BigNumber;
+}
+export type PositionOpenedEvent = TypedEvent<
+  [boolean, BigNumber, boolean, BigNumber],
+  PositionOpenedEventObject
+>;
+
+export type PositionOpenedEventFilter = TypedEventFilter<PositionOpenedEvent>;
 
 export interface RedeemableSoftCapUpdatedEventObject {
   caller: string;
@@ -941,6 +956,19 @@ export interface PerpDepository extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "PositionOpened(bool,uint256,bool,uint160)"(
+      isShort?: null,
+      amount?: null,
+      amountIsInput?: null,
+      sqrtPriceLimitX96?: null
+    ): PositionOpenedEventFilter;
+    PositionOpened(
+      isShort?: null,
+      amount?: null,
+      amountIsInput?: null,
+      sqrtPriceLimitX96?: null
+    ): PositionOpenedEventFilter;
 
     "RedeemableSoftCapUpdated(address,uint256)"(
       caller?: PromiseOrValue<string> | null,
