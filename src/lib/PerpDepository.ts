@@ -22,12 +22,12 @@ export class PerpDepository {
     );
   }
 
-  insuranceToken(): Promise<string> {
-    return this.depositoryContract.insuranceToken();
+  quoteToken(): Promise<string> {
+    return this.depositoryContract.quoteToken();
   }
 
-  collateralToken(): Promise<string> {
-    return this.depositoryContract.collateralToken();
+  baseToken(): Promise<string> {
+    return this.depositoryContract.baseToken();
   }
 
   async exchangeFee(): Promise<number> {
