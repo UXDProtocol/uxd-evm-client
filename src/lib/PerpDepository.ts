@@ -42,7 +42,7 @@ export class PerpDepository {
 
   async redeemableAmountPending(): Promise<number> {
     const amountPending =
-      await this.depositoryContract.redeemableAmountPending();
+      await this.depositoryContract.redeemableUnderManagement();
     return Number(ethers.utils.formatEther(amountPending));
   }
 

@@ -31,7 +31,7 @@ import type {
 export type DepositoryStateStruct = {
   collateralDeposited: PromiseOrValue<BigNumberish>;
   insuranceDeposited: PromiseOrValue<BigNumberish>;
-  redeemableAmountPending: PromiseOrValue<BigNumberish>;
+  redeemableUnderManagement: PromiseOrValue<BigNumberish>;
   totalFeesPaid: PromiseOrValue<BigNumberish>;
   redeemableSoftCap: PromiseOrValue<BigNumberish>;
 };
@@ -45,7 +45,7 @@ export type DepositoryStateStructOutput = [
 ] & {
   collateralDeposited: BigNumber;
   insuranceDeposited: BigNumber;
-  redeemableAmountPending: BigNumber;
+  redeemableUnderManagement: BigNumber;
   totalFeesPaid: BigNumber;
   redeemableSoftCap: BigNumber;
 };
@@ -101,7 +101,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     "insuranceDeposited()": FunctionFragment;
     "market()": FunctionFragment;
     "marketRegistry()": FunctionFragment;
-    "mintAllowance()": FunctionFragment;
     "openLong((uint256,address,uint160,address))": FunctionFragment;
     "openShort((uint256,address,uint160))": FunctionFragment;
     "owner()": FunctionFragment;
@@ -111,11 +110,11 @@ export interface PerpDepositoryInterface extends utils.Interface {
     "proxiableUUID()": FunctionFragment;
     "quoteMinted()": FunctionFragment;
     "quoteToken()": FunctionFragment;
-    "rebalance(uint256,uint256,uint160,int8,address)": FunctionFragment;
+    "rebalance(uint256,uint256,uint160,uint24,int8,address)": FunctionFragment;
     "rebalanceLite(uint256,int8,uint160,address)": FunctionFragment;
-    "redeemAllowance()": FunctionFragment;
-    "redeemableAmountPending()": FunctionFragment;
     "redeemableSoftCap()": FunctionFragment;
+    "redeemableSupplyToPositionSizeDelta()": FunctionFragment;
+    "redeemableUnderManagement()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "router()": FunctionFragment;
     "setController(address)": FunctionFragment;
@@ -150,7 +149,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
       | "insuranceDeposited"
       | "market"
       | "marketRegistry"
-      | "mintAllowance"
       | "openLong"
       | "openShort"
       | "owner"
@@ -162,9 +160,9 @@ export interface PerpDepositoryInterface extends utils.Interface {
       | "quoteToken"
       | "rebalance"
       | "rebalanceLite"
-      | "redeemAllowance"
-      | "redeemableAmountPending"
       | "redeemableSoftCap"
+      | "redeemableSupplyToPositionSizeDelta"
+      | "redeemableUnderManagement"
       | "renounceOwnership"
       | "router"
       | "setController"
@@ -248,10 +246,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "mintAllowance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "openLong",
     values: [LongPositionParamsStruct]
   ): string;
@@ -291,6 +285,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -304,15 +299,15 @@ export interface PerpDepositoryInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "redeemAllowance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "redeemableAmountPending",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "redeemableSoftCap",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeemableSupplyToPositionSizeDelta",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeemableUnderManagement",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -412,10 +407,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     functionFragment: "marketRegistry",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "mintAllowance",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "openLong", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "openShort", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -446,15 +437,15 @@ export interface PerpDepositoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "redeemAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "redeemableAmountPending",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "redeemableSoftCap",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemableSupplyToPositionSizeDelta",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemableUnderManagement",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -699,8 +690,6 @@ export interface PerpDepository extends BaseContract {
 
     marketRegistry(overrides?: CallOverrides): Promise<[string]>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     openLong(
       params: LongPositionParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -736,6 +725,7 @@ export interface PerpDepository extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       amountOutMinimum: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
+      swapPoolFee: PromiseOrValue<BigNumberish>,
       polarity: PromiseOrValue<BigNumberish>,
       account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -749,11 +739,13 @@ export interface PerpDepository extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    redeemAllowance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    redeemableAmountPending(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     redeemableSoftCap(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    redeemableSupplyToPositionSizeDelta(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    redeemableUnderManagement(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -863,8 +855,6 @@ export interface PerpDepository extends BaseContract {
 
   marketRegistry(overrides?: CallOverrides): Promise<string>;
 
-  mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
   openLong(
     params: LongPositionParamsStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -900,6 +890,7 @@ export interface PerpDepository extends BaseContract {
     amount: PromiseOrValue<BigNumberish>,
     amountOutMinimum: PromiseOrValue<BigNumberish>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
+    swapPoolFee: PromiseOrValue<BigNumberish>,
     polarity: PromiseOrValue<BigNumberish>,
     account: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -913,11 +904,13 @@ export interface PerpDepository extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  redeemAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  redeemableAmountPending(overrides?: CallOverrides): Promise<BigNumber>;
-
   redeemableSoftCap(overrides?: CallOverrides): Promise<BigNumber>;
+
+  redeemableSupplyToPositionSizeDelta(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  redeemableUnderManagement(overrides?: CallOverrides): Promise<BigNumber>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1027,8 +1020,6 @@ export interface PerpDepository extends BaseContract {
 
     marketRegistry(overrides?: CallOverrides): Promise<string>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
     openLong(
       params: LongPositionParamsStruct,
       overrides?: CallOverrides
@@ -1064,6 +1055,7 @@ export interface PerpDepository extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       amountOutMinimum: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
+      swapPoolFee: PromiseOrValue<BigNumberish>,
       polarity: PromiseOrValue<BigNumberish>,
       account: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1077,11 +1069,13 @@ export interface PerpDepository extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
-    redeemAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    redeemableAmountPending(overrides?: CallOverrides): Promise<BigNumber>;
-
     redeemableSoftCap(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeemableSupplyToPositionSizeDelta(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    redeemableUnderManagement(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -1269,8 +1263,6 @@ export interface PerpDepository extends BaseContract {
 
     marketRegistry(overrides?: CallOverrides): Promise<BigNumber>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
     openLong(
       params: LongPositionParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1306,6 +1298,7 @@ export interface PerpDepository extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       amountOutMinimum: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
+      swapPoolFee: PromiseOrValue<BigNumberish>,
       polarity: PromiseOrValue<BigNumberish>,
       account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1319,11 +1312,13 @@ export interface PerpDepository extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    redeemAllowance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    redeemableAmountPending(overrides?: CallOverrides): Promise<BigNumber>;
-
     redeemableSoftCap(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeemableSupplyToPositionSizeDelta(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    redeemableUnderManagement(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1436,8 +1431,6 @@ export interface PerpDepository extends BaseContract {
 
     marketRegistry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    mintAllowance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     openLong(
       params: LongPositionParamsStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1473,6 +1466,7 @@ export interface PerpDepository extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       amountOutMinimum: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
+      swapPoolFee: PromiseOrValue<BigNumberish>,
       polarity: PromiseOrValue<BigNumberish>,
       account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1486,13 +1480,15 @@ export interface PerpDepository extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    redeemAllowance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    redeemableSoftCap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    redeemableAmountPending(
+    redeemableSupplyToPositionSizeDelta(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    redeemableSoftCap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    redeemableUnderManagement(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
