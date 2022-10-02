@@ -38,9 +38,12 @@ export interface UXDControllerInterface extends utils.Interface {
     "mintWithEth(uint160)": FunctionFragment;
     "owner()": FunctionFragment;
     "proxiableUUID()": FunctionFragment;
+    "quoteMint(address,uint256)": FunctionFragment;
+    "quoteRedeem(address,uint256)": FunctionFragment;
     "redeem(address,uint256,uint160)": FunctionFragment;
     "redeemForEth(uint256,uint160)": FunctionFragment;
     "redeemable()": FunctionFragment;
+    "registerQuoteToken(address,bool)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "router()": FunctionFragment;
     "setRedeemable(address)": FunctionFragment;
@@ -62,9 +65,12 @@ export interface UXDControllerInterface extends utils.Interface {
       | "mintWithEth"
       | "owner"
       | "proxiableUUID"
+      | "quoteMint"
+      | "quoteRedeem"
       | "redeem"
       | "redeemForEth"
       | "redeemable"
+      | "registerQuoteToken"
       | "renounceOwnership"
       | "router"
       | "setRedeemable"
@@ -107,6 +113,14 @@ export interface UXDControllerInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "quoteMint",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "quoteRedeem",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "redeem",
     values: [
       PromiseOrValue<string>,
@@ -121,6 +135,10 @@ export interface UXDControllerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "redeemable",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "registerQuoteToken",
+    values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -177,12 +195,21 @@ export interface UXDControllerInterface extends utils.Interface {
     functionFragment: "proxiableUUID",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "quoteMint", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "quoteRedeem",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "redeemForEth",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "redeemable", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "registerQuoteToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -214,6 +241,9 @@ export interface UXDControllerInterface extends utils.Interface {
     "Initialized(uint8)": EventFragment;
     "Minted(address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "QuoteMinted(address,uint256,uint256)": EventFragment;
+    "QuoteRedeemed(address,uint256,uint256)": EventFragment;
+    "QuoteTokenRegistered(address,bool)": EventFragment;
     "Redeemed(address,uint256,uint256)": EventFragment;
     "RouterUpdated(address,address)": EventFragment;
     "Upgraded(address)": EventFragment;
@@ -225,6 +255,9 @@ export interface UXDControllerInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Minted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "QuoteMinted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "QuoteRedeemed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "QuoteTokenRegistered"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Redeemed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RouterUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
@@ -282,6 +315,42 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface QuoteMintedEventObject {
+  account: string;
+  quoteAmount: BigNumber;
+  redeemabelAmount: BigNumber;
+}
+export type QuoteMintedEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  QuoteMintedEventObject
+>;
+
+export type QuoteMintedEventFilter = TypedEventFilter<QuoteMintedEvent>;
+
+export interface QuoteRedeemedEventObject {
+  account: string;
+  quoteAmount: BigNumber;
+  redeemableAmount: BigNumber;
+}
+export type QuoteRedeemedEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  QuoteRedeemedEventObject
+>;
+
+export type QuoteRedeemedEventFilter = TypedEventFilter<QuoteRedeemedEvent>;
+
+export interface QuoteTokenRegisteredEventObject {
+  quoteToken: string;
+  isQuote: boolean;
+}
+export type QuoteTokenRegisteredEvent = TypedEvent<
+  [string, boolean],
+  QuoteTokenRegisteredEventObject
+>;
+
+export type QuoteTokenRegisteredEventFilter =
+  TypedEventFilter<QuoteTokenRegisteredEvent>;
 
 export interface RedeemedEventObject {
   account: string;
@@ -371,7 +440,7 @@ export interface UXDController extends BaseContract {
     ): Promise<ContractTransaction>;
 
     mint(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -386,8 +455,20 @@ export interface UXDController extends BaseContract {
 
     proxiableUUID(overrides?: CallOverrides): Promise<[string]>;
 
+    quoteMint(
+      quoteTokenAddress: PromiseOrValue<string>,
+      quoteAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    quoteRedeem(
+      quoteTokenAddress: PromiseOrValue<string>,
+      redeemableAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     redeem(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -400,6 +481,12 @@ export interface UXDController extends BaseContract {
     ): Promise<ContractTransaction>;
 
     redeemable(overrides?: CallOverrides): Promise<[string]>;
+
+    registerQuoteToken(
+      tokenAddress: PromiseOrValue<string>,
+      isQuote: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -461,7 +548,7 @@ export interface UXDController extends BaseContract {
   ): Promise<ContractTransaction>;
 
   mint(
-    collateralToken: PromiseOrValue<string>,
+    baseToken: PromiseOrValue<string>,
     collateralAmount: PromiseOrValue<BigNumberish>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -476,8 +563,20 @@ export interface UXDController extends BaseContract {
 
   proxiableUUID(overrides?: CallOverrides): Promise<string>;
 
+  quoteMint(
+    quoteTokenAddress: PromiseOrValue<string>,
+    quoteAmount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  quoteRedeem(
+    quoteTokenAddress: PromiseOrValue<string>,
+    redeemableAmount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   redeem(
-    collateralToken: PromiseOrValue<string>,
+    baseToken: PromiseOrValue<string>,
     redeemAmount: PromiseOrValue<BigNumberish>,
     sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -490,6 +589,12 @@ export interface UXDController extends BaseContract {
   ): Promise<ContractTransaction>;
 
   redeemable(overrides?: CallOverrides): Promise<string>;
+
+  registerQuoteToken(
+    tokenAddress: PromiseOrValue<string>,
+    isQuote: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -551,7 +656,7 @@ export interface UXDController extends BaseContract {
     ): Promise<void>;
 
     mint(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -566,8 +671,20 @@ export interface UXDController extends BaseContract {
 
     proxiableUUID(overrides?: CallOverrides): Promise<string>;
 
+    quoteMint(
+      quoteTokenAddress: PromiseOrValue<string>,
+      quoteAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    quoteRedeem(
+      quoteTokenAddress: PromiseOrValue<string>,
+      redeemableAmount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     redeem(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -580,6 +697,12 @@ export interface UXDController extends BaseContract {
     ): Promise<[BigNumber, BigNumber]>;
 
     redeemable(overrides?: CallOverrides): Promise<string>;
+
+    registerQuoteToken(
+      tokenAddress: PromiseOrValue<string>,
+      isQuote: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -661,6 +784,37 @@ export interface UXDController extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
+    "QuoteMinted(address,uint256,uint256)"(
+      account?: PromiseOrValue<string> | null,
+      quoteAmount?: null,
+      redeemabelAmount?: null
+    ): QuoteMintedEventFilter;
+    QuoteMinted(
+      account?: PromiseOrValue<string> | null,
+      quoteAmount?: null,
+      redeemabelAmount?: null
+    ): QuoteMintedEventFilter;
+
+    "QuoteRedeemed(address,uint256,uint256)"(
+      account?: PromiseOrValue<string> | null,
+      quoteAmount?: null,
+      redeemableAmount?: null
+    ): QuoteRedeemedEventFilter;
+    QuoteRedeemed(
+      account?: PromiseOrValue<string> | null,
+      quoteAmount?: null,
+      redeemableAmount?: null
+    ): QuoteRedeemedEventFilter;
+
+    "QuoteTokenRegistered(address,bool)"(
+      quoteToken?: PromiseOrValue<string> | null,
+      isQuote?: null
+    ): QuoteTokenRegisteredEventFilter;
+    QuoteTokenRegistered(
+      quoteToken?: PromiseOrValue<string> | null,
+      isQuote?: null
+    ): QuoteTokenRegisteredEventFilter;
+
     "Redeemed(address,uint256,uint256)"(
       account?: PromiseOrValue<string> | null,
       base?: null,
@@ -719,7 +873,7 @@ export interface UXDController extends BaseContract {
     ): Promise<BigNumber>;
 
     mint(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -734,8 +888,20 @@ export interface UXDController extends BaseContract {
 
     proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>;
 
+    quoteMint(
+      quoteTokenAddress: PromiseOrValue<string>,
+      quoteAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    quoteRedeem(
+      quoteTokenAddress: PromiseOrValue<string>,
+      redeemableAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     redeem(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -748,6 +914,12 @@ export interface UXDController extends BaseContract {
     ): Promise<BigNumber>;
 
     redeemable(overrides?: CallOverrides): Promise<BigNumber>;
+
+    registerQuoteToken(
+      tokenAddress: PromiseOrValue<string>,
+      isQuote: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -810,7 +982,7 @@ export interface UXDController extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       collateralAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -825,8 +997,20 @@ export interface UXDController extends BaseContract {
 
     proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    quoteMint(
+      quoteTokenAddress: PromiseOrValue<string>,
+      quoteAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    quoteRedeem(
+      quoteTokenAddress: PromiseOrValue<string>,
+      redeemableAmount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     redeem(
-      collateralToken: PromiseOrValue<string>,
+      baseToken: PromiseOrValue<string>,
       redeemAmount: PromiseOrValue<BigNumberish>,
       sqrtPriceLimitX96: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -839,6 +1023,12 @@ export interface UXDController extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     redeemable(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    registerQuoteToken(
+      tokenAddress: PromiseOrValue<string>,
+      isQuote: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
