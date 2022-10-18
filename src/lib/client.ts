@@ -1,14 +1,12 @@
 import { providers } from "ethers";
 import {
   ERC20,
-  PerpDepository as PerpDepositoryContract,
-  UXDController as UXDControllerContract,
-} from "../artifacts/types";
-import {
   ERC20__factory,
+  PerpDepository as PerpDepositoryContract,
   PerpDepository__factory,
+  UXDController as UXDControllerContract,
   UXDController__factory,
-} from "../artifacts/types/factories";
+} from "../artifacts/types";
 import { PerpDepository } from "./PerpDepository";
 import { UXDController } from "./UXDController";
 
@@ -18,7 +16,7 @@ export class UXDClient {
 
   // -- TEMPORARY --
   // IN ORDER TO EXPOSE CONTRACTS WAITING FOR PROPER UTILITIES FUNCTIONS TO BE IMPLEMENTED
-  protected readonly provider: providers.JsonRpcProvider;
+  protected readonly provider: providers.Provider;
   protected readonly redeemable: string;
   protected readonly controllerAddress: string;
   protected readonly depositoryAddress: string;
@@ -30,7 +28,7 @@ export class UXDClient {
     depository,
     redeemable,
   }: {
-    provider: providers.JsonRpcProvider;
+    provider: providers.Provider;
     controller: string;
     depository: string;
     redeemable: string;

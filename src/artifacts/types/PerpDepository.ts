@@ -85,7 +85,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
   functions: {
     "HUNDRED_PERCENT()": FunctionFragment;
     "VERSION()": FunctionFragment;
-    "_gap1()": FunctionFragment;
     "baseToken()": FunctionFragment;
     "clearingHouse()": FunctionFragment;
     "collateralDeposited()": FunctionFragment;
@@ -96,6 +95,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
     "exchangeFeeWad()": FunctionFragment;
     "getAccountValue(address)": FunctionFragment;
     "getCurrentState()": FunctionFragment;
+    "getDebtValue(address)": FunctionFragment;
     "getFreeCollateral()": FunctionFragment;
     "initialize(address,address,address,address,address,address,address)": FunctionFragment;
     "insuranceDeposited()": FunctionFragment;
@@ -113,15 +113,15 @@ export interface PerpDepositoryInterface extends utils.Interface {
     "rebalance(uint256,uint256,uint160,uint24,int8,address)": FunctionFragment;
     "rebalanceLite(uint256,int8,uint160,address)": FunctionFragment;
     "redeemableSoftCap()": FunctionFragment;
-    "redeemableSupplyToPositionSizeDelta()": FunctionFragment;
     "redeemableUnderManagement()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "router()": FunctionFragment;
     "setController(address)": FunctionFragment;
     "setRedeemableSoftCap(uint256)": FunctionFragment;
-    "spotMarket()": FunctionFragment;
+    "setSpotSwapper(address)": FunctionFragment;
+    "spotSwapper()": FunctionFragment;
     "totalFeesPaid()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "unrealizedPnl()": FunctionFragment;
     "upgradeTo(address)": FunctionFragment;
     "upgradeToAndCall(address,bytes)": FunctionFragment;
     "vault()": FunctionFragment;
@@ -133,7 +133,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "HUNDRED_PERCENT"
       | "VERSION"
-      | "_gap1"
       | "baseToken"
       | "clearingHouse"
       | "collateralDeposited"
@@ -144,6 +143,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
       | "exchangeFeeWad"
       | "getAccountValue"
       | "getCurrentState"
+      | "getDebtValue"
       | "getFreeCollateral"
       | "initialize"
       | "insuranceDeposited"
@@ -161,15 +161,15 @@ export interface PerpDepositoryInterface extends utils.Interface {
       | "rebalance"
       | "rebalanceLite"
       | "redeemableSoftCap"
-      | "redeemableSupplyToPositionSizeDelta"
       | "redeemableUnderManagement"
       | "renounceOwnership"
-      | "router"
       | "setController"
       | "setRedeemableSoftCap"
-      | "spotMarket"
+      | "setSpotSwapper"
+      | "spotSwapper"
       | "totalFeesPaid"
       | "transferOwnership"
+      | "unrealizedPnl"
       | "upgradeTo"
       | "upgradeToAndCall"
       | "vault"
@@ -182,7 +182,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "VERSION", values?: undefined): string;
-  encodeFunctionData(functionFragment: "_gap1", values?: undefined): string;
   encodeFunctionData(functionFragment: "baseToken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "clearingHouse",
@@ -219,6 +218,10 @@ export interface PerpDepositoryInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getCurrentState",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getDebtValue",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getFreeCollateral",
@@ -303,10 +306,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "redeemableSupplyToPositionSizeDelta",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "redeemableUnderManagement",
     values?: undefined
   ): string;
@@ -314,7 +313,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setController",
     values: [PromiseOrValue<string>]
@@ -324,7 +322,11 @@ export interface PerpDepositoryInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "spotMarket",
+    functionFragment: "setSpotSwapper",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "spotSwapper",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -334,6 +336,10 @@ export interface PerpDepositoryInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unrealizedPnl",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "upgradeTo",
@@ -358,7 +364,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "VERSION", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "_gap1", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "baseToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "clearingHouse",
@@ -391,6 +396,10 @@ export interface PerpDepositoryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getCurrentState",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getDebtValue",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -441,10 +450,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "redeemableSupplyToPositionSizeDelta",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "redeemableUnderManagement",
     data: BytesLike
   ): Result;
@@ -452,7 +457,6 @@ export interface PerpDepositoryInterface extends utils.Interface {
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setController",
     data: BytesLike
@@ -461,13 +465,24 @@ export interface PerpDepositoryInterface extends utils.Interface {
     functionFragment: "setRedeemableSoftCap",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "spotMarket", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setSpotSwapper",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "spotSwapper",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "totalFeesPaid",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unrealizedPnl",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
@@ -493,6 +508,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
     "InsuranceWithdrawn(address,address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "PositionOpened(bool,uint256,bool,uint160)": EventFragment;
+    "Rebalanced(uint256,uint256,uint256)": EventFragment;
     "RedeemableSoftCapUpdated(address,uint256)": EventFragment;
     "Upgraded(address)": EventFragment;
   };
@@ -504,6 +520,7 @@ export interface PerpDepositoryInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "InsuranceWithdrawn"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PositionOpened"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Rebalanced"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RedeemableSoftCapUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
 }
@@ -587,6 +604,18 @@ export type PositionOpenedEvent = TypedEvent<
 
 export type PositionOpenedEventFilter = TypedEventFilter<PositionOpenedEvent>;
 
+export interface RebalancedEventObject {
+  baseAmount: BigNumber;
+  quoteAmount: BigNumber;
+  shortfall: BigNumber;
+}
+export type RebalancedEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber],
+  RebalancedEventObject
+>;
+
+export type RebalancedEventFilter = TypedEventFilter<RebalancedEvent>;
+
 export interface RedeemableSoftCapUpdatedEventObject {
   caller: string;
   newSoftCap: BigNumber;
@@ -637,8 +666,6 @@ export interface PerpDepository extends BaseContract {
 
     VERSION(overrides?: CallOverrides): Promise<[string]>;
 
-    _gap1(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     baseToken(overrides?: CallOverrides): Promise<[string]>;
 
     clearingHouse(overrides?: CallOverrides): Promise<[string]>;
@@ -670,6 +697,11 @@ export interface PerpDepository extends BaseContract {
     getCurrentState(
       overrides?: CallOverrides
     ): Promise<[DepositoryStateStructOutput]>;
+
+    getDebtValue(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getFreeCollateral(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -741,17 +773,11 @@ export interface PerpDepository extends BaseContract {
 
     redeemableSoftCap(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    redeemableSupplyToPositionSizeDelta(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     redeemableUnderManagement(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    router(overrides?: CallOverrides): Promise<[string]>;
 
     setController(
       _controller: PromiseOrValue<string>,
@@ -763,7 +789,12 @@ export interface PerpDepository extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    spotMarket(overrides?: CallOverrides): Promise<[string]>;
+    setSpotSwapper(
+      _swapper: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    spotSwapper(overrides?: CallOverrides): Promise<[string]>;
 
     totalFeesPaid(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -771,6 +802,8 @@ export interface PerpDepository extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    unrealizedPnl(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     upgradeTo(
       newImplementation: PromiseOrValue<string>,
@@ -801,8 +834,6 @@ export interface PerpDepository extends BaseContract {
   HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
 
   VERSION(overrides?: CallOverrides): Promise<string>;
-
-  _gap1(overrides?: CallOverrides): Promise<BigNumber>;
 
   baseToken(overrides?: CallOverrides): Promise<string>;
 
@@ -835,6 +866,11 @@ export interface PerpDepository extends BaseContract {
   getCurrentState(
     overrides?: CallOverrides
   ): Promise<DepositoryStateStructOutput>;
+
+  getDebtValue(
+    account: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getFreeCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -906,17 +942,11 @@ export interface PerpDepository extends BaseContract {
 
   redeemableSoftCap(overrides?: CallOverrides): Promise<BigNumber>;
 
-  redeemableSupplyToPositionSizeDelta(
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   redeemableUnderManagement(overrides?: CallOverrides): Promise<BigNumber>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  router(overrides?: CallOverrides): Promise<string>;
 
   setController(
     _controller: PromiseOrValue<string>,
@@ -928,7 +958,12 @@ export interface PerpDepository extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  spotMarket(overrides?: CallOverrides): Promise<string>;
+  setSpotSwapper(
+    _swapper: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  spotSwapper(overrides?: CallOverrides): Promise<string>;
 
   totalFeesPaid(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -936,6 +971,8 @@ export interface PerpDepository extends BaseContract {
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  unrealizedPnl(overrides?: CallOverrides): Promise<BigNumber>;
 
   upgradeTo(
     newImplementation: PromiseOrValue<string>,
@@ -966,8 +1003,6 @@ export interface PerpDepository extends BaseContract {
     HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
 
     VERSION(overrides?: CallOverrides): Promise<string>;
-
-    _gap1(overrides?: CallOverrides): Promise<BigNumber>;
 
     baseToken(overrides?: CallOverrides): Promise<string>;
 
@@ -1000,6 +1035,11 @@ export interface PerpDepository extends BaseContract {
     getCurrentState(
       overrides?: CallOverrides
     ): Promise<DepositoryStateStructOutput>;
+
+    getDebtValue(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getFreeCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1071,15 +1111,9 @@ export interface PerpDepository extends BaseContract {
 
     redeemableSoftCap(overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeemableSupplyToPositionSizeDelta(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     redeemableUnderManagement(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    router(overrides?: CallOverrides): Promise<string>;
 
     setController(
       _controller: PromiseOrValue<string>,
@@ -1091,7 +1125,12 @@ export interface PerpDepository extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    spotMarket(overrides?: CallOverrides): Promise<string>;
+    setSpotSwapper(
+      _swapper: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    spotSwapper(overrides?: CallOverrides): Promise<string>;
 
     totalFeesPaid(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1099,6 +1138,8 @@ export interface PerpDepository extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    unrealizedPnl(overrides?: CallOverrides): Promise<BigNumber>;
 
     upgradeTo(
       newImplementation: PromiseOrValue<string>,
@@ -1190,6 +1231,17 @@ export interface PerpDepository extends BaseContract {
       sqrtPriceLimitX96?: null
     ): PositionOpenedEventFilter;
 
+    "Rebalanced(uint256,uint256,uint256)"(
+      baseAmount?: null,
+      quoteAmount?: null,
+      shortfall?: null
+    ): RebalancedEventFilter;
+    Rebalanced(
+      baseAmount?: null,
+      quoteAmount?: null,
+      shortfall?: null
+    ): RebalancedEventFilter;
+
     "RedeemableSoftCapUpdated(address,uint256)"(
       caller?: PromiseOrValue<string> | null,
       newSoftCap?: null
@@ -1211,8 +1263,6 @@ export interface PerpDepository extends BaseContract {
     HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
 
     VERSION(overrides?: CallOverrides): Promise<BigNumber>;
-
-    _gap1(overrides?: CallOverrides): Promise<BigNumber>;
 
     baseToken(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1243,6 +1293,11 @@ export interface PerpDepository extends BaseContract {
     ): Promise<BigNumber>;
 
     getCurrentState(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getDebtValue(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getFreeCollateral(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1314,17 +1369,11 @@ export interface PerpDepository extends BaseContract {
 
     redeemableSoftCap(overrides?: CallOverrides): Promise<BigNumber>;
 
-    redeemableSupplyToPositionSizeDelta(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     redeemableUnderManagement(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    router(overrides?: CallOverrides): Promise<BigNumber>;
 
     setController(
       _controller: PromiseOrValue<string>,
@@ -1336,7 +1385,12 @@ export interface PerpDepository extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    spotMarket(overrides?: CallOverrides): Promise<BigNumber>;
+    setSpotSwapper(
+      _swapper: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    spotSwapper(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalFeesPaid(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1344,6 +1398,8 @@ export interface PerpDepository extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    unrealizedPnl(overrides?: CallOverrides): Promise<BigNumber>;
 
     upgradeTo(
       newImplementation: PromiseOrValue<string>,
@@ -1376,8 +1432,6 @@ export interface PerpDepository extends BaseContract {
 
     VERSION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    _gap1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     baseToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     clearingHouse(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1409,6 +1463,11 @@ export interface PerpDepository extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getCurrentState(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getDebtValue(
+      account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getFreeCollateral(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1482,10 +1541,6 @@ export interface PerpDepository extends BaseContract {
 
     redeemableSoftCap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    redeemableSupplyToPositionSizeDelta(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     redeemableUnderManagement(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1493,8 +1548,6 @@ export interface PerpDepository extends BaseContract {
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    router(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setController(
       _controller: PromiseOrValue<string>,
@@ -1506,7 +1559,12 @@ export interface PerpDepository extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    spotMarket(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    setSpotSwapper(
+      _swapper: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    spotSwapper(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalFeesPaid(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1514,6 +1572,8 @@ export interface PerpDepository extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    unrealizedPnl(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     upgradeTo(
       newImplementation: PromiseOrValue<string>,
