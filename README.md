@@ -122,7 +122,7 @@ await controller.redeem(wethAddress, uxdAmount, targetPrice, signer);
 #### Redeem UXD for ETH
 
 ```typescript
-await controller.redeemEth(uxdAmount, wtargetPricelippage, signer);
+await controller.redeemEth(uxdAmount, targetPrice, signer);
 ```
 
 Check [here](https://github.com/UXDProtocol/uxd-evm-client/blob/main/src/lib/controller.ts) to see the list of public functions availale on the controller.
