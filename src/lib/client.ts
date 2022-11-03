@@ -16,7 +16,7 @@ export class UXDClient {
 
   // -- TEMPORARY --
   // IN ORDER TO EXPOSE CONTRACTS WAITING FOR PROPER UTILITIES FUNCTIONS TO BE IMPLEMENTED
-  protected readonly provider: providers.Provider;
+  protected readonly provider: providers.JsonRpcProvider;
   protected readonly redeemable: string;
   protected readonly controllerAddress: string;
   protected readonly depositoryAddress: string;
@@ -28,7 +28,7 @@ export class UXDClient {
     depository,
     redeemable,
   }: {
-    provider: providers.Provider;
+    provider: providers.JsonRpcProvider;
     controller: string;
     depository: string;
     redeemable: string;

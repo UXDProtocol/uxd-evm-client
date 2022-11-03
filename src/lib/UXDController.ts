@@ -28,7 +28,7 @@ export interface CollateralInfo {
 }
 
 export class UXDController {
-  protected provider: providers.Provider;
+  protected provider: ethers.providers.JsonRpcProvider;
 
   // internal contracts
   protected controllerContract: UXDControllerContract;
@@ -49,7 +49,7 @@ export class UXDController {
     controller,
     redeemable,
   }: {
-    provider: providers.Provider;
+    provider: ethers.providers.JsonRpcProvider;
     controller: string;
     redeemable: string;
   }) {
