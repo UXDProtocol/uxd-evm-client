@@ -3,7 +3,6 @@ import {
   Contract,
   ContractTransaction,
   ethers,
-  providers,
   Signer,
 } from "ethers";
 import { Subject } from "rxjs";
