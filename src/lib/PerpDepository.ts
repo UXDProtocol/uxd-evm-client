@@ -31,7 +31,7 @@ export class PerpDepository {
   }
 
   async exchangeFee(): Promise<number> {
-    const fee = await this.depositoryContract.exchangeFee();
+    const fee = await this.depositoryContract.getExchangeFee();
     return Number(ethers.utils.formatUnits(fee, "6"));
   }
 
