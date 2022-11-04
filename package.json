@@ -36,7 +36,7 @@
   "dependencies": {
     "@perp/sdk-curie": "1.14.0-canary.1",
     "bignumber.js": "^9.0.2",
-    "ethers": "5.6.2",
+    "ethers": "5.5.0",
     "rxjs": "^7.5.5",
     "typechain": "^8.1.1"
   },
