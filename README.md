@@ -2,7 +2,25 @@
 
 Typescript library for interacting with the UXD contracts on EVM.
 
-### To use
+
+## To Build
+
+1. Build the package
+```sh
+npm run build
+```
+
+2. Generate typing files from contract ABIs
+```sh
+sh ./scripts/generate-types.sh
+```
+
+3. Run the linter to properly format typescript files.
+```sh
+npm run format
+```
+
+## To use
 
 ### Install the library
 
@@ -45,7 +63,7 @@ const controller = "..."; // controller address
 const depository = "..."; // depository address
 const redeemable = "..."; // redeemable address
 
-const provider = new ethers.providers.JsonRpcProvider("https://kovan.optimism.io");
+const provider = new ethers.providers.JsonRpcProvider("https://goerli.optimism.io");
 const client = new UXDClient({
   provider, 
   controller, 
@@ -72,10 +90,10 @@ To mint with WETH can call the `mint()` function:
 
 ```typescript
 await controller.mint(
-      collateralAddress,
-      wethAmount,
-      slippageAmount
-      signer
+      ethAmount,
+      targetePrice,
+      signer,
+      collateralAddress
     )
 ```
 
@@ -90,7 +108,7 @@ await controller.approveToken(contractAddress, spender, amount, signer);
 #### Mint UXD with ETH
 
 ```typescript
-await controller.mintWithEth(ethAmount, slippage, signer);
+await controller.mintWithEth(ethAmount, targetPrice, signer);
 ```
 
 No prior approval is required to mint with native ETH.
@@ -98,13 +116,13 @@ No prior approval is required to mint with native ETH.
 #### Redeem UXD for ETH
 
 ```typescript
-await controller.redeem(wethAddress, uxdAmount, slippage, signer);
+await controller.redeem(wethAddress, uxdAmount, targetPrice, signer);
 ```
 
 #### Redeem UXD for ETH
 
 ```typescript
-await controller.redeemEth(uxdAmount, slippage, signer);
+await controller.redeemEth(uxdAmount, targetPrice, signer);
 ```
 
 Check [here](https://github.com/UXDProtocol/uxd-evm-client/blob/main/src/lib/controller.ts) to see the list of public functions availale on the controller.

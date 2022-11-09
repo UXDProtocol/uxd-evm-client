@@ -5,14 +5,14 @@ import {
 } from "../artifacts/types";
 
 export class PerpDepository {
-  private provider: providers.Provider;
+  private provider: providers.JsonRpcProvider;
   private depositoryContract: PerpDepositoryContract;
 
   constructor({
     provider,
     address,
   }: {
-    provider: providers.Provider;
+    provider: providers.JsonRpcProvider;
     address: string;
   }) {
     this.provider = provider;
@@ -31,7 +31,7 @@ export class PerpDepository {
   }
 
   async exchangeFee(): Promise<number> {
-    const fee = await this.depositoryContract.exchangeFee();
+    const fee = await this.depositoryContract.getExchangeFee();
     return Number(ethers.utils.formatUnits(fee, "6"));
   }
 
