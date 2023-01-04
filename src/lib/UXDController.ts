@@ -106,8 +106,7 @@ export class UXDController {
         minNativeAmountOut,
         receiver ?? await signer.getAddress(),
         {
-          // ??? Which is the correct gas limit to put? Ask john
-          gasLimit: ethers.utils.parseEther('0.000000000009'),
+          gasLimit: 8_500_000,
         }
       );
   }
@@ -130,8 +129,7 @@ export class UXDController {
         receiver ?? await signer.getAddress(),
         {
           value: nativeAmount,
-          // ??? Which is the correct gas limit to put? Ask john
-          gasLimit: ethers.utils.parseEther('0.000000000009'),
+          gasLimit: 8_500_000,
         },
       );
   }
@@ -192,8 +190,7 @@ export class UXDController {
         minNativeAmountOut,
         receiver ?? await signer.getAddress(),
         {
-          // ??? Which is the correct gas limit to put? Ask john
-          gasLimit: ethers.utils.parseEther('0.000000000009'),
+          gasLimit: 8_500_000,
         },
       );
   }
@@ -216,8 +213,7 @@ export class UXDController {
         minNativeAmountOut,
         receiver ?? await signer.getAddress(),
         {
-          // ??? Which is the correct gas limit to put? Ask john
-          gasLimit: ethers.utils.parseEther('0.000000000009'),
+          gasLimit: 8_500_000,
         },
       );
   }
