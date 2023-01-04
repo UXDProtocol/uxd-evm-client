@@ -1,13 +1,11 @@
 import {
   BigNumber,
-  Contract,
   ContractTransaction,
   ethers,
   Signer,
   providers,
   utils,
 } from "ethers";
-import { Subject } from "rxjs";
 import {
   UXDToken__factory,
   UXDController__factory,
@@ -15,7 +13,6 @@ import {
   UXDController as UXDControllerContract,
   ERC20__factory,
 } from "../typechain-types";
-import { encodePriceSqrt } from "./priceEncoder";
 import { Address } from "./types";
 
 export interface CollateralInfo {
@@ -101,8 +98,6 @@ export class UXDController {
     collateral: Address;
     receiver?: Address;
   }): Promise<ContractTransaction> {
-    console.log('Mint with ERC20!');
-
     return this.contract
       .connect(signer)
       .mint(
@@ -128,24 +123,107 @@ export class UXDController {
     signer: Signer;
     receiver?: Address;
   }): Promise<ContractTransaction> {
-    console.log('Mint with ETH!');
-
-    const receiverAddress = receiver ?? await signer.getAddress();
-
     return this.contract
       .connect(signer)
       .mintWithEth(
         minNativeAmountOut,
-        receiverAddress,
+        receiver ?? await signer.getAddress(),
         {
           value: nativeAmount,
           // ??? Which is the correct gas limit to put? Ask john
-          gasLimit: ethers.utils.parseEther('0.000000000007'),
+          gasLimit: ethers.utils.parseEther('0.000000000009'),
         },
       );
   }
 
-  public approveUXD({
+  public redeem({
+    amount,
+    minAmountOut,
+    signer,
+    collateral,
+    receiver,
+  }: {
+    amount: number;
+    minAmountOut: number;
+    signer: Signer;
+    collateral?: Address;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    const nativeAmount = utils.parseEther(amount.toString());
+    const minNativeAmountOut = utils.parseEther(minAmountOut.toString());
+
+    if (collateral) {
+      return this.redeemForERC20({
+        nativeAmount,
+        minNativeAmountOut,
+        signer,
+        collateral,
+        receiver,
+      });
+    }
+
+    return this.redeemForETH({
+      nativeAmount,
+      minNativeAmountOut,
+      signer,
+      receiver,
+    });
+  }
+
+  // Redeem with any ERC20 compatible token
+  protected async redeemForERC20({
+    nativeAmount,
+    minNativeAmountOut,
+    signer,
+    collateral,
+    receiver,
+  }: {
+    nativeAmount: BigNumber;
+    minNativeAmountOut: BigNumber;
+    signer: Signer;
+    collateral: Address;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    return this.contract
+      .connect(signer)
+      .redeem(
+        collateral,
+        nativeAmount,
+        minNativeAmountOut,
+        receiver ?? await signer.getAddress(),
+        {
+          // ??? Which is the correct gas limit to put? Ask john
+          gasLimit: ethers.utils.parseEther('0.000000000009'),
+        },
+      );
+  }
+
+  protected async redeemForETH({
+    nativeAmount,
+    minNativeAmountOut,
+    signer,
+    receiver,
+  }: {
+    nativeAmount: BigNumber;
+    minNativeAmountOut: BigNumber;
+    signer: Signer;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    return this.contract
+      .connect(signer)
+      .redeemForEth(
+        nativeAmount,
+        minNativeAmountOut,
+        receiver ?? await signer.getAddress(),
+        {
+          // ??? Which is the correct gas limit to put? Ask john
+          gasLimit: ethers.utils.parseEther('0.000000000009'),
+        },
+      );
+  }
+
+  // Gives the right to the spender to use given amount of UXD
+  public approveUXDTransfer({
     spender,
     amount,
     signer,
@@ -159,7 +237,8 @@ export class UXDController {
     return this.uxdTokenContract.connect(signer).approve(spender, uxdAmount);
   }
 
-  public approveERC20Token({
+  // Gives the right to the spender to use given amount of token
+  public approveERC20TokenTransfer({
     token,
     spender,
     amount,
@@ -177,7 +256,8 @@ export class UXDController {
       .approve(spender, nativeAmount);
   }
 
-  public async allowERC20TokenTransfer({
+  // Returns how much token the spender have the right to spent for the given account
+  public async getERC20TokenAllowance({
     token,
     account,
     spender,
@@ -191,7 +271,7 @@ export class UXDController {
       this.provider
     ).allowance(account, spender);
 
-    return Number(ethers.utils.formatEther(allowance));
+    return parseInt(ethers.utils.formatEther(allowance));
   }
 
   public async getTokenBalance({
@@ -206,6 +286,6 @@ export class UXDController {
       this.provider
     ).balanceOf(account);
 
-    return Number(ethers.utils.formatEther(balance));
+    return parseInt(ethers.utils.formatEther(balance));
   }
 }
