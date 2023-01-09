@@ -56,15 +56,17 @@ export class UXDController {
     signer,
     collateral,
     receiver,
+    decimals,
   }: {
     amount: number;
     minAmountOut: number;
     signer: Signer;
+    decimals: number;
     collateral?: Address;
     receiver?: Address;
   }): Promise<ContractTransaction> {
-    const nativeAmount = utils.parseEther(amount.toString());
-    const minNativeAmountOut = utils.parseEther(minAmountOut.toString());
+    const nativeAmount = utils.parseUnits(amount.toString(), decimals);
+    const minNativeAmountOut = utils.parseUnits(minAmountOut.toString(), decimals);
 
     if (collateral) {
       return this.mintWithERC20({
@@ -140,15 +142,17 @@ export class UXDController {
     signer,
     collateral,
     receiver,
+    decimals,
   }: {
     amount: number;
     minAmountOut: number;
     signer: Signer;
     collateral?: Address;
     receiver?: Address;
+    decimals: number;
   }): Promise<ContractTransaction> {
-    const nativeAmount = utils.parseEther(amount.toString());
-    const minNativeAmountOut = utils.parseEther(minAmountOut.toString());
+    const nativeAmount = utils.parseUnits(amount.toString(), decimals);
+    const minNativeAmountOut = utils.parseUnits(minAmountOut.toString(), decimals);
 
     if (collateral) {
       return this.redeemForERC20({
@@ -239,13 +243,15 @@ export class UXDController {
     spender,
     amount,
     signer,
+    decimals,
   }: {
     token: Address;
     spender: Address;
     amount: number;
     signer: Signer;
+    decimals: number;
   }): Promise<ContractTransaction> {
-    const nativeAmount = utils.parseEther(amount.toString());
+    const nativeAmount = utils.parseUnits(amount.toString(), decimals);
 
     return ERC20__factory.connect(token, signer)
       .connect(signer)
@@ -257,31 +263,35 @@ export class UXDController {
     token,
     account,
     spender,
+    decimals,
   }: {
     token: Address;
     account: Address;
     spender: Address;
+    decimals: number;
   }): Promise<number> {
     const allowance = await ERC20__factory.connect(
       token,
       this.provider
     ).allowance(account, spender);
 
-    return parseInt(ethers.utils.formatEther(allowance));
+    return parseInt(ethers.utils.formatUnits(allowance, decimals));
   }
 
   public async getTokenBalance({
     token,
     account,
+    decimals,
   }: {
     token: Address;
     account: Address;
+    decimals: number;
   }): Promise<number> {
     const balance = await ERC20__factory.connect(
       token,
       this.provider
     ).balanceOf(account);
 
-    return parseInt(ethers.utils.formatEther(balance));
+    return parseInt(ethers.utils.formatUnits(balance, decimals));
   }
 }
