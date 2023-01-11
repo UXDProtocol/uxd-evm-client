@@ -1,2 +1,2 @@
 // Makes Ethereum addresses explicit
-export type Address = string
+export type Address = string;

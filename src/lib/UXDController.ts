@@ -25,8 +25,8 @@ export interface CollateralInfo {
 export class UXDController {
   public readonly provider: providers.JsonRpcProvider;
 
-  public readonly contract: UXDControllerContract
-  public readonly uxdTokenContract: UXDTokenContract
+  public readonly contract: UXDControllerContract;
+  public readonly uxdTokenContract: UXDTokenContract;
 
   constructor({
     provider,
@@ -39,14 +39,11 @@ export class UXDController {
   }) {
     this.provider = provider;
 
-    this.contract = UXDController__factory.connect(
-      controller,
-      this.provider,
-    );
+    this.contract = UXDController__factory.connect(controller, this.provider);
 
     this.uxdTokenContract = UXDToken__factory.connect(
       redeemable,
-      this.provider,
+      this.provider
     );
   }
 
@@ -66,7 +63,10 @@ export class UXDController {
     receiver?: Address;
   }): Promise<ContractTransaction> {
     const nativeAmount = utils.parseUnits(amount.toString(), decimals);
-    const minNativeAmountOut = utils.parseUnits(minAmountOut.toString(), decimals);
+    const minNativeAmountOut = utils.parseUnits(
+      minAmountOut.toString(),
+      decimals
+    );
 
     if (collateral) {
       return this.mintWithERC20({
@@ -106,7 +106,7 @@ export class UXDController {
         collateral,
         nativeAmount,
         minNativeAmountOut,
-        receiver ?? await signer.getAddress(),
+        receiver ?? (await signer.getAddress()),
         {
           gasLimit: 8_500_000,
         }
@@ -128,11 +128,11 @@ export class UXDController {
       .connect(signer)
       .mintWithEth(
         minNativeAmountOut,
-        receiver ?? await signer.getAddress(),
+        receiver ?? (await signer.getAddress()),
         {
           value: nativeAmount,
           gasLimit: 8_500_000,
-        },
+        }
       );
   }
 
@@ -152,7 +152,10 @@ export class UXDController {
     decimals: number;
   }): Promise<ContractTransaction> {
     const nativeAmount = utils.parseUnits(amount.toString(), decimals);
-    const minNativeAmountOut = utils.parseUnits(minAmountOut.toString(), decimals);
+    const minNativeAmountOut = utils.parseUnits(
+      minAmountOut.toString(),
+      decimals
+    );
 
     if (collateral) {
       return this.redeemForERC20({
@@ -192,10 +195,10 @@ export class UXDController {
         collateral,
         nativeAmount,
         minNativeAmountOut,
-        receiver ?? await signer.getAddress(),
+        receiver ?? (await signer.getAddress()),
         {
           gasLimit: 8_500_000,
-        },
+        }
       );
   }
 
@@ -215,10 +218,10 @@ export class UXDController {
       .redeemForEth(
         nativeAmount,
         minNativeAmountOut,
-        receiver ?? await signer.getAddress(),
+        receiver ?? (await signer.getAddress()),
         {
           gasLimit: 8_500_000,
-        },
+        }
       );
   }
 
