@@ -24,16 +24,6 @@ npm run format
 npm i "uxd-evm-client@0.2.3"
 ```
 
-### Generation of ethers-contracts types
-
-https://github.com/dethcrypto/TypeChain
-
-Run the following command that will generate typing for contracts:
-
-```
- ./scripts/generate-types.sh
-```
-
 ### Import library code
 
 You need to import the UXDController from the library as well as the ethers library
