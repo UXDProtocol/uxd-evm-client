@@ -2,20 +2,16 @@
 
 Typescript library for interacting with the UXD contracts on EVM.
 
-
 ## To Build
 
 1. Build the package
+
 ```sh
 npm run build
 ```
 
-2. Generate typing files from contract ABIs
-```sh
-sh ./scripts/generate-types.sh
-```
+2. Run the linter to properly format typescript files.
 
-3. Run the linter to properly format typescript files.
 ```sh
 npm run format
 ```
@@ -65,8 +61,8 @@ const redeemable = "..."; // redeemable address
 
 const provider = new ethers.providers.JsonRpcProvider("https://goerli.optimism.io");
 const client = new UXDClient({
-  provider, 
-  controller, 
+  provider,
+  controller,
   depository
   redeemable
 });
@@ -89,12 +85,7 @@ console.log("totalsupply = ", totalSupply);
 To mint with WETH can call the `mint()` function:
 
 ```typescript
-await controller.mint(
-      ethAmount,
-      targetePrice,
-      signer,
-      collateralAddress
-    )
+await controller.mint(ethAmount, targetePrice, signer, collateralAddress);
 ```
 
 > Note: The controller must be approved to access the users WETH otherwise the call with revert with an error.
