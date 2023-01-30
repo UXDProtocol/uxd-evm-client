@@ -53,19 +53,26 @@ export class UXDController {
     signer,
     collateral,
     receiver,
-    decimals,
+    redeemableDecimals,
+    collateralDecimals,
   }: {
+    // The amount of collateral used to mint.
     amount: number;
+    // The minimum amount of redeemable minted
     minAmountOut: number;
     signer: Signer;
-    decimals: number;
+    redeemableDecimals: number;
+    collateralDecimals: number;
     collateral?: Address;
     receiver?: Address;
   }): Promise<ContractTransaction> {
-    const nativeAmount = utils.parseUnits(amount.toString(), decimals);
+    const nativeAmount = utils.parseUnits(
+      amount.toString(),
+      collateralDecimals
+    );
     const minNativeAmountOut = utils.parseUnits(
       minAmountOut.toString(),
-      decimals
+      redeemableDecimals
     );
 
     if (collateral) {
@@ -142,19 +149,26 @@ export class UXDController {
     signer,
     collateral,
     receiver,
-    decimals,
+    redeemableDecimals,
+    collateralDecimals,
   }: {
+    // The amount to redeemable token being redeemed.
     amount: number;
+    // The min amount of collateral to receive.
     minAmountOut: number;
     signer: Signer;
     collateral?: Address;
     receiver?: Address;
-    decimals: number;
+    redeemableDecimals: number;
+    collateralDecimals: number;
   }): Promise<ContractTransaction> {
-    const nativeAmount = utils.parseUnits(amount.toString(), decimals);
+    const nativeAmount = utils.parseUnits(
+      amount.toString(),
+      redeemableDecimals
+    );
     const minNativeAmountOut = utils.parseUnits(
       minAmountOut.toString(),
-      decimals
+      collateralDecimals
     );
 
     if (collateral) {

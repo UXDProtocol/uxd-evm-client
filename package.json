@@ -1,6 +1,6 @@
 {
   "name": "@uxdprotocol/uxd-evm-client",
-  "version": "0.6.0-beta",
+  "version": "0.6.1-beta",
   "description": "UXD EVM client",
   "author": "UXD Protocol",
   "keywords": [],
