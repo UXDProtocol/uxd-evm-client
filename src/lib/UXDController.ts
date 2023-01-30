@@ -33,7 +33,7 @@ export class UXDController {
     controller,
     redeemable,
   }: {
-    provider: ethers.providers.JsonRpcProvider;
+    provider: providers.JsonRpcProvider;
     controller: Address;
     redeemable: Address;
   }) {
@@ -244,12 +244,14 @@ export class UXDController {
     spender,
     amount,
     signer,
+    decimals,
   }: {
     spender: Address;
     amount: number;
     signer: Signer;
+    decimals: number;
   }): Promise<ContractTransaction> {
-    const uxdAmount = utils.parseEther(amount.toString());
+    const uxdAmount = utils.parseUnits(amount.toString(), decimals);
 
     return this.uxdTokenContract.connect(signer).approve(spender, uxdAmount);
   }
@@ -292,7 +294,7 @@ export class UXDController {
       this.provider
     ).allowance(account, spender);
 
-    return parseInt(ethers.utils.formatUnits(allowance, decimals));
+    return parseInt(utils.formatUnits(allowance, decimals));
   }
 
   public async getTokenBalance({
@@ -309,6 +311,6 @@ export class UXDController {
       this.provider
     ).balanceOf(account);
 
-    return parseInt(ethers.utils.formatUnits(balance, decimals));
+    return parseInt(utils.formatUnits(balance, decimals));
   }
 }
