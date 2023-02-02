@@ -56,7 +56,7 @@ export class UXDController {
     redeemableDecimals,
     collateralDecimals,
   }: {
-    // The amount of collateral used to mint.
+    // The amount of collateral used to mint
     amount: number;
     // The minimum amount of redeemable minted
     minAmountOut: number;
@@ -152,9 +152,9 @@ export class UXDController {
     redeemableDecimals,
     collateralDecimals,
   }: {
-    // The amount to redeemable token being redeemed.
+    // The amount to redeemable token being redeemed
     amount: number;
-    // The min amount of collateral to receive.
+    // The min amount of collateral to receive
     minAmountOut: number;
     signer: Signer;
     collateral?: Address;
