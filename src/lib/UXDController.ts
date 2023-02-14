@@ -1,7 +1,6 @@
 import {
   BigNumber,
   ContractTransaction,
-  ethers,
   Signer,
   providers,
   utils,
@@ -116,6 +115,7 @@ export class UXDController {
         receiver ?? (await signer.getAddress()),
         {
           gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
         }
       );
   }
@@ -139,6 +139,7 @@ export class UXDController {
         {
           value: nativeAmount,
           gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
         }
       );
   }
@@ -212,6 +213,7 @@ export class UXDController {
         receiver ?? (await signer.getAddress()),
         {
           gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
         }
       );
   }
@@ -235,6 +237,7 @@ export class UXDController {
         receiver ?? (await signer.getAddress()),
         {
           gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
         }
       );
   }
