@@ -297,7 +297,7 @@ export class UXDController {
       this.provider
     ).allowance(account, spender);
 
-    return parseInt(utils.formatUnits(allowance, decimals));
+    return parseFloat(utils.formatUnits(allowance, decimals));
   }
 
   public async getTokenBalance({
@@ -314,6 +314,6 @@ export class UXDController {
       this.provider
     ).balanceOf(account);
 
-    return parseInt(utils.formatUnits(balance, decimals));
+    return parseFloat(utils.formatUnits(balance, decimals));
   }
 }
