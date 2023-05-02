@@ -1,23 +1,18 @@
 import {
   BigNumber,
-  Contract,
   ContractTransaction,
-  ethers,
   Signer,
+  providers,
+  utils,
 } from "ethers";
-import { Subject } from "rxjs";
 import {
-  MintedEventObject,
-  RedeemedEventObject,
+  UXDToken__factory,
+  UXDController__factory,
+  UXDToken as UXDTokenContract,
   UXDController as UXDControllerContract,
-} from "../artifacts/types/UXDController";
-import {
-  ERC20,
-  ApprovalEventObject,
-  TransferEventObject,
-} from "../artifacts/types/ERC20";
-import { ERC20__factory, UXDController__factory } from "../artifacts/types";
-import { encodePriceSqrt } from "./priceEncoder";
+  ERC20__factory,
+} from "../typechain-types";
+import { Address } from "./types";
 
 export interface CollateralInfo {
   symbol?: string;
@@ -27,238 +22,298 @@ export interface CollateralInfo {
 }
 
 export class UXDController {
-  protected provider: ethers.providers.JsonRpcProvider;
+  public readonly provider: providers.JsonRpcProvider;
 
-  // internal contracts
-  protected controllerContract: UXDControllerContract;
-  protected uxdContract: ERC20;
-
-  // clients can listen to events on these subjects
-  public readonly mintSubject: Subject<MintedEventObject> =
-    new Subject<MintedEventObject>();
-  public readonly redeemSubject: Subject<RedeemedEventObject> =
-    new Subject<RedeemedEventObject>();
-  public readonly uxdApprovalSubject: Subject<ApprovalEventObject> =
-    new Subject<ApprovalEventObject>();
-  public readonly uxdTransferSubject: Subject<TransferEventObject> =
-    new Subject<TransferEventObject>();
+  public readonly contract: UXDControllerContract;
+  public readonly uxdTokenContract: UXDTokenContract;
 
   constructor({
     provider,
     controller,
     redeemable,
   }: {
-    provider: ethers.providers.JsonRpcProvider;
-    controller: string;
-    redeemable: string;
+    provider: providers.JsonRpcProvider;
+    controller: Address;
+    redeemable: Address;
   }) {
     this.provider = provider;
-    this.controllerContract = UXDController__factory.connect(
-      controller,
+
+    this.contract = UXDController__factory.connect(controller, this.provider);
+
+    this.uxdTokenContract = UXDToken__factory.connect(
+      redeemable,
       this.provider
     );
-    this.uxdContract = ERC20__factory.connect(redeemable, this.provider);
   }
 
-  public mint({
+  public async mint({
     amount,
-    targetPrice,
+    minAmountOut,
     signer,
     collateral,
+    receiver,
+    redeemableDecimals,
+    collateralDecimals,
   }: {
+    // The amount of collateral used to mint
     amount: number;
-    targetPrice: number;
+    // The minimum amount of redeemable minted
+    minAmountOut: number;
     signer: Signer;
-    collateral?: string;
+    redeemableDecimals: number;
+    collateralDecimals: number;
+    collateral?: Address;
+    receiver?: Address;
   }): Promise<ContractTransaction> {
-    const ethAmount = ethers.utils.parseEther(amount.toString());
-    const targetPriceX96 = encodePriceSqrt(targetPrice);
+    const nativeAmount = utils.parseUnits(
+      amount.toString(),
+      collateralDecimals
+    );
+    const minNativeAmountOut = utils.parseUnits(
+      minAmountOut.toString(),
+      redeemableDecimals
+    );
+
     if (collateral) {
-      return this.mintWithERC20(ethAmount, targetPriceX96, signer, collateral);
+      return this.mintWithERC20({
+        nativeAmount,
+        minNativeAmountOut,
+        signer,
+        collateral,
+        receiver,
+      });
     }
-    return this.mintWithETH(ethAmount, targetPriceX96, signer);
+
+    return this.mintWithETH({
+      nativeAmount,
+      minNativeAmountOut,
+      signer,
+      receiver,
+    });
   }
 
-  private mintWithERC20(
-    ethAmount: BigNumber,
-    targetPriceX96: BigNumber,
-    signer: Signer,
-    collateral: string
-  ): Promise<ContractTransaction> {
-    return this.controllerContract
+  // Mint with any ERC20 compatible token
+  protected async mintWithERC20({
+    nativeAmount,
+    minNativeAmountOut,
+    signer,
+    collateral,
+    receiver,
+  }: {
+    nativeAmount: BigNumber;
+    minNativeAmountOut: BigNumber;
+    signer: Signer;
+    collateral: Address;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    return this.contract
       .connect(signer)
-      .mint(collateral, ethAmount, targetPriceX96);
+      .mint(
+        collateral,
+        nativeAmount,
+        minNativeAmountOut,
+        receiver ?? (await signer.getAddress()),
+        {
+          gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
+        }
+      );
   }
 
-  private mintWithETH(
-    ethAmount: BigNumber,
-    targetPriceX96: BigNumber,
-    signer: Signer
-  ): Promise<ContractTransaction> {
-    return this.controllerContract
+  protected async mintWithETH({
+    nativeAmount,
+    minNativeAmountOut,
+    signer,
+    receiver,
+  }: {
+    nativeAmount: BigNumber;
+    minNativeAmountOut: BigNumber;
+    signer: Signer;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    return this.contract
       .connect(signer)
-      .mintWithEth(targetPriceX96, { value: ethAmount });
+      .mintWithEth(
+        minNativeAmountOut,
+        receiver ?? (await signer.getAddress()),
+        {
+          value: nativeAmount,
+          gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
+        }
+      );
   }
 
   public redeem({
     amount,
-    targetPrice,
+    minAmountOut,
     signer,
     collateral,
+    receiver,
+    redeemableDecimals,
+    collateralDecimals,
   }: {
+    // The amount to redeemable token being redeemed
     amount: number;
-    targetPrice: number;
+    // The min amount of collateral to receive
+    minAmountOut: number;
     signer: Signer;
-    collateral?: string;
+    collateral?: Address;
+    receiver?: Address;
+    redeemableDecimals: number;
+    collateralDecimals: number;
   }): Promise<ContractTransaction> {
-    const uxdAmount = ethers.utils.parseEther(amount.toString());
-    const targetPriceX96 = encodePriceSqrt(targetPrice);
-    if (collateral) {
-      return this.redeemERC20(uxdAmount, targetPriceX96, signer, collateral);
-    }
-    return this.redeemEth(uxdAmount, targetPriceX96, signer);
-  }
-
-  private redeemERC20(
-    uxdAmount: BigNumber,
-    targetPriceX96: BigNumber,
-    signer: Signer,
-    collateral: string
-  ): Promise<ContractTransaction> {
-    return this.controllerContract
-      .connect(signer)
-      .redeem(collateral, uxdAmount, targetPriceX96);
-  }
-
-  private redeemEth(
-    uxdAmount: BigNumber,
-    targetPriceX96: BigNumber,
-    signer: Signer
-  ): Promise<ContractTransaction> {
-    return this.controllerContract
-      .connect(signer)
-      .redeemForEth(uxdAmount, targetPriceX96);
-  }
-
-  public approveUXD({
-    spender,
-    amount,
-    signer,
-  }: {
-    spender: string;
-    amount: number;
-    signer: Signer;
-  }): Promise<ContractTransaction> {
-    const uxdAmount = ethers.utils.parseEther(amount.toString());
-    return this.uxdContract.connect(signer).approve(spender, uxdAmount);
-  }
-
-  public approveToken({
-    contractAddress,
-    spender,
-    amount,
-    signer,
-  }: {
-    contractAddress: string;
-    spender: string;
-    amount: number;
-    signer: Signer;
-  }): Promise<ContractTransaction> {
-    const ethAmount = ethers.utils.parseEther(amount.toString());
-    return ERC20__factory.connect(contractAddress, signer)
-      .connect(signer)
-      .approve(spender, ethAmount);
-  }
-
-  public async allowance({
-    contractAddress,
-    account,
-    spender,
-  }: {
-    contractAddress: string;
-    account: string;
-    spender: string;
-  }): Promise<number> {
-    const allowance = await ERC20__factory.connect(
-      contractAddress,
-      this.provider
-    ).allowance(account, spender);
-    return Number(ethers.utils.formatEther(allowance));
-  }
-
-  public async tokenBalance({
-    contractAddress,
-    account,
-  }: {
-    contractAddress: string;
-    account: string;
-  }): Promise<number> {
-    const balance = await ERC20__factory.connect(
-      contractAddress,
-      this.provider
-    ).balanceOf(account);
-    return Number(ethers.utils.formatEther(balance));
-  }
-
-  public async getRedeemableMintCirculatingSupply(): Promise<number> {
-    const totalSupply = await this.uxdContract.totalSupply();
-    return Number(ethers.utils.formatEther(totalSupply));
-  }
-
-  // ===== utils
-
-  // Transform values in an array into an object with named attributes
-  // Use the position of the key and the value to match
-  protected arrayToObject<T>(keys: (keyof T)[], values: unknown[]): T {
-    return keys.reduce(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (obj, value, index) => (obj[value] = values[index] as any),
-      {} as T
+    const nativeAmount = utils.parseUnits(
+      amount.toString(),
+      redeemableDecimals
     );
-  }
+    const minNativeAmountOut = utils.parseUnits(
+      minAmountOut.toString(),
+      collateralDecimals
+    );
 
-  // Utility function that converts an event object received from the contract to a subject
-  protected registerEventListener<
-    T =
-      | MintedEventObject
-      | RedeemedEventObject
-      | ApprovalEventObject
-      | TransferEventObject
-  >(
-    contract: Contract,
-    eventName: string,
-    subject: Subject<T>,
-    keys: (keyof T)[]
-  ): void {
-    contract.on(eventName, (args) => {
-      subject.next(this.arrayToObject(keys, args));
+    if (collateral) {
+      return this.redeemForERC20({
+        nativeAmount,
+        minNativeAmountOut,
+        signer,
+        collateral,
+        receiver,
+      });
+    }
+
+    return this.redeemForETH({
+      nativeAmount,
+      minNativeAmountOut,
+      signer,
+      receiver,
     });
   }
 
-  protected registerEventListeners() {
-    this.registerEventListener<MintedEventObject>(
-      this.controllerContract,
-      "Minted",
-      this.mintSubject,
-      ["account", "base", "quote"]
-    );
-    this.registerEventListener<RedeemedEventObject>(
-      this.controllerContract,
-      "Redeemed",
-      this.redeemSubject,
-      ["account", "base", "quote"]
-    );
-    this.registerEventListener<ApprovalEventObject>(
-      this.uxdContract,
-      "Approval",
-      this.uxdApprovalSubject,
-      ["owner", "spender", "value"]
-    );
-    this.registerEventListener<TransferEventObject>(
-      this.uxdContract,
-      "Transfer",
-      this.uxdTransferSubject,
-      ["from", "to", "value"]
-    );
+  // Redeem with any ERC20 compatible token
+  protected async redeemForERC20({
+    nativeAmount,
+    minNativeAmountOut,
+    signer,
+    collateral,
+    receiver,
+  }: {
+    nativeAmount: BigNumber;
+    minNativeAmountOut: BigNumber;
+    signer: Signer;
+    collateral: Address;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    return this.contract
+      .connect(signer)
+      .redeem(
+        collateral,
+        nativeAmount,
+        minNativeAmountOut,
+        receiver ?? (await signer.getAddress()),
+        {
+          gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
+        }
+      );
+  }
+
+  protected async redeemForETH({
+    nativeAmount,
+    minNativeAmountOut,
+    signer,
+    receiver,
+  }: {
+    nativeAmount: BigNumber;
+    minNativeAmountOut: BigNumber;
+    signer: Signer;
+    receiver?: Address;
+  }): Promise<ContractTransaction> {
+    return this.contract
+      .connect(signer)
+      .redeemForEth(
+        nativeAmount,
+        minNativeAmountOut,
+        receiver ?? (await signer.getAddress()),
+        {
+          gasLimit: 8_500_000,
+          gasPrice: 110_000_000,
+        }
+      );
+  }
+
+  // Gives the right to the spender to use given amount of UXD
+  public approveUXDTransfer({
+    spender,
+    amount,
+    signer,
+    decimals,
+  }: {
+    spender: Address;
+    amount: number;
+    signer: Signer;
+    decimals: number;
+  }): Promise<ContractTransaction> {
+    const uxdAmount = utils.parseUnits(amount.toString(), decimals);
+
+    return this.uxdTokenContract.connect(signer).approve(spender, uxdAmount);
+  }
+
+  // Gives the right to the spender to use given amount of token
+  public approveERC20TokenTransfer({
+    token,
+    spender,
+    amount,
+    signer,
+    decimals,
+  }: {
+    token: Address;
+    spender: Address;
+    amount: number;
+    signer: Signer;
+    decimals: number;
+  }): Promise<ContractTransaction> {
+    const nativeAmount = utils.parseUnits(amount.toString(), decimals);
+
+    return ERC20__factory.connect(token, signer)
+      .connect(signer)
+      .approve(spender, nativeAmount);
+  }
+
+  // Returns how much token the spender have the right to spent for the given account
+  public async getERC20TokenAllowance({
+    token,
+    account,
+    spender,
+    decimals,
+  }: {
+    token: Address;
+    account: Address;
+    spender: Address;
+    decimals: number;
+  }): Promise<number> {
+    const allowance = await ERC20__factory.connect(
+      token,
+      this.provider
+    ).allowance(account, spender);
+
+    return parseFloat(utils.formatUnits(allowance, decimals));
+  }
+
+  public async getTokenBalance({
+    token,
+    account,
+    decimals,
+  }: {
+    token: Address;
+    account: Address;
+    decimals: number;
+  }): Promise<number> {
+    const balance = await ERC20__factory.connect(
+      token,
+      this.provider
+    ).balanceOf(account);
+
+    return parseFloat(utils.formatUnits(balance, decimals));
   }
 }

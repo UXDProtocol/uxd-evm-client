@@ -1,6 +1,6 @@
 import { PerpetualProtocol } from "@perp/sdk-curie";
 
-export class PerpInteractor {
+export class PerpWrapper {
   private perp: PerpetualProtocol;
 
   constructor({ perp }: { perp: PerpetualProtocol }) {
@@ -10,13 +10,13 @@ export class PerpInteractor {
   static async initialize(
     rpcEndpoint: string,
     chainId: number
-  ): Promise<PerpInteractor> {
+  ): Promise<PerpWrapper> {
     const perp = new PerpetualProtocol({
       chainId,
       providerConfigs: [{ rpcUrl: rpcEndpoint }],
     });
     await perp.init();
-    return new PerpInteractor({ perp });
+    return new PerpWrapper({ perp });
   }
 
   async getMarkPrice(tickerSymbol: string): Promise<number> {
